@@ -1,6 +1,8 @@
 package com.ProjetoManicure.Manicure.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "clientes")
@@ -9,9 +11,13 @@ public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
+    @NotBlank(message = "Nome é obrigatório")
     private String nome;
+
+    @NotBlank(message = "Telefone é obrigatório")
     private String telefone;
+
+    @Email(message = "E-mail inválido")
     private String email;
 
     @ManyToOne

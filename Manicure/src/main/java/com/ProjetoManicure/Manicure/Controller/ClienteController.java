@@ -2,6 +2,7 @@ package com.ProjetoManicure.Manicure.Controller;
 
 import com.ProjetoManicure.Manicure.model.Cliente;
 import com.ProjetoManicure.Manicure.service.ClienteService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +27,11 @@ public class ClienteController {
 
     // Buscar cliente por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Cliente> buscarPorId(@PathVariable int id) {
+    public ResponseEntity<Cliente> buscarPorId(
+            @PathVariable int id,
+            @RequestHeader("Authorization") String token) {
 
-        Cliente cliente = clienteService.buscarPorId(id);
+        Cliente cliente = clienteService.buscarPorId(id, token);
 
         if (cliente == null) {
             return ResponseEntity.notFound().build();
@@ -40,7 +43,7 @@ public class ClienteController {
     // Cadastrar cliente
     @PostMapping
     public ResponseEntity<Cliente> cadastrar(
-            @RequestBody Cliente cliente,
+            @Valid @RequestBody Cliente cliente,
             @RequestHeader("Authorization") String token) {
 
         Cliente clienteSalvo = clienteService.cadastrar(cliente, token);
@@ -52,22 +55,23 @@ public class ClienteController {
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> atualizar(
             @PathVariable int id,
-            @RequestBody Cliente dados) {
+            @RequestBody Cliente dados,
+            @RequestHeader("Authorization") String token) {
 
-        Cliente clienteAtualizado = clienteService.atualizar(id, dados);
+        Cliente clienteAtualizado = clienteService.atualizar(id, dados, token);
 
-        if (clienteAtualizado == null) {
-            return ResponseEntity.notFound().build();
-        }
+
 
         return ResponseEntity.ok(clienteAtualizado);
     }
 
     // Excluir cliente
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluir(@PathVariable int id) {
+    public ResponseEntity<Void> excluir(
+            @PathVariable int id,
+            @RequestHeader("Authorization") String token) {
 
-        boolean excluido = clienteService.excluir(id);
+        boolean excluido = clienteService.excluir(id, token);
 
         if (!excluido) {
             return ResponseEntity.notFound().build();

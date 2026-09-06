@@ -1,5 +1,6 @@
 package com.ProjetoManicure.Manicure.service;
 
+import com.ProjetoManicure.Manicure.exception.ClienteNaoEncontradoException;
 import com.ProjetoManicure.Manicure.model.Cliente;
 import com.ProjetoManicure.Manicure.model.Profissional;
 import com.ProjetoManicure.Manicure.repository.ClienteRepository;
@@ -31,8 +32,18 @@ public class ClienteService {
         return clienteRepository.findByProfissionalId(profissionalId);
     }
 
-    public Cliente buscarPorId(int id) {
-        return clienteRepository.findById(id).orElse(null);
+    public Cliente buscarPorId(int id, String token) {
+
+        token = token.replace("Bearer ", "");
+
+        Claims claims = jwtService.validarToken(token);
+
+        int profissionalId = claims.get("id", Integer.class);
+
+        return clienteRepository
+                .findById(id)
+                .filter(cliente -> cliente.getProfissional().getId() == profissionalId)
+                .orElseThrow(ClienteNaoEncontradoException::new);
     }
 
     public Cliente cadastrar(Cliente cliente, String token) {
@@ -52,9 +63,18 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
-    public Cliente atualizar(int id, Cliente dados) {
+    public Cliente atualizar(int id, Cliente dados, String token) {
 
-        Cliente cliente = clienteRepository.findById(id).orElse(null);
+        token = token.replace("Bearer ", "");
+
+        Claims claims = jwtService.validarToken(token);
+
+        int profissionalId = claims.get("id", Integer.class);
+
+        Cliente cliente = clienteRepository
+                .findById(id)
+                .filter(c -> c.getProfissional().getId() == profissionalId)
+                .orElse(null);
 
         if (cliente == null) {
             return null;
@@ -67,13 +87,24 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
 
-    public boolean excluir(int id) {
+    public boolean excluir(int id, String token) {
 
-        if (!clienteRepository.existsById(id)) {
+        token = token.replace("Bearer ", "");
+
+        Claims claims = jwtService.validarToken(token);
+
+        int profissionalId = claims.get("id", Integer.class);
+
+        Cliente cliente = clienteRepository
+                .findById(id)
+                .filter(c -> c.getProfissional().getId() == profissionalId)
+                .orElse(null);
+
+        if (cliente == null) {
             return false;
         }
 
-        clienteRepository.deleteById(id);
+        clienteRepository.delete(cliente);
         return true;
     }
 }
