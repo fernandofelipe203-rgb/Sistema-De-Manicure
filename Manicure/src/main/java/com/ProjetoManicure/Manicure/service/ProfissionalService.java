@@ -1,5 +1,6 @@
 package com.ProjetoManicure.Manicure.service;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.ProjetoManicure.Manicure.model.Profissional;
 import com.ProjetoManicure.Manicure.repository.ProfissionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,9 @@ public class ProfissionalService {
 
     @Autowired
     private ProfissionalRepository profissionalRepository;
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+
 
     public List<Profissional> listar() {
         return profissionalRepository.findAll();
@@ -22,12 +26,18 @@ public class ProfissionalService {
     }
 
     public Profissional cadastrar(Profissional profissional) {
+
+        profissional.setSenha(
+                passwordEncoder.encode(profissional.getSenha())
+        );
+
         return profissionalRepository.save(profissional);
     }
 
     public Profissional atualizar(int id, Profissional dados) {
 
-        Profissional profissional = profissionalRepository.findById(id).orElse(null);
+        Profissional profissional =
+                profissionalRepository.findById(id).orElse(null);
 
         if (profissional == null) {
             return null;
@@ -35,8 +45,15 @@ public class ProfissionalService {
 
         profissional.setNome(dados.getNome());
         profissional.setEmail(dados.getEmail());
-        profissional.setSenha(dados.getSenha());
+        profissional.setTelefone(dados.getTelefone());
         profissional.setPerfil(dados.getPerfil());
+
+        // Só altera a senha se uma nova senha for enviada
+        if (dados.getSenha() != null && !dados.getSenha().isBlank()) {
+            profissional.setSenha(
+                    passwordEncoder.encode(dados.getSenha())
+            );
+        }
 
         return profissionalRepository.save(profissional);
     }

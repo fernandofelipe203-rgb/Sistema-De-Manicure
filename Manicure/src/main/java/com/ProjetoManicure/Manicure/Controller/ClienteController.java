@@ -18,8 +18,10 @@ public class ClienteController {
 
     // Listar todos os clientes
     @GetMapping
-    public List<Cliente> listar() {
-        return clienteService.listar();
+    public List<Cliente> listar(
+            @RequestHeader("Authorization") String token) {
+
+        return clienteService.listar(token);
     }
 
     // Buscar cliente por ID
@@ -37,9 +39,11 @@ public class ClienteController {
 
     // Cadastrar cliente
     @PostMapping
-    public ResponseEntity<Cliente> cadastrar(@RequestBody Cliente cliente) {
+    public ResponseEntity<Cliente> cadastrar(
+            @RequestBody Cliente cliente,
+            @RequestHeader("Authorization") String token) {
 
-        Cliente clienteSalvo = clienteService.cadastrar(cliente);
+        Cliente clienteSalvo = clienteService.cadastrar(cliente, token);
 
         return ResponseEntity.ok(clienteSalvo);
     }

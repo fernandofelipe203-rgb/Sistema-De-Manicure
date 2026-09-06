@@ -1,5 +1,7 @@
 package com.ProjetoManicure.Manicure.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,9 +14,11 @@ public class Profissional {
 
     private String nome;
     private String email;
-    private String senha;
-    private String telefone;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String senha;
+
+    private String telefone;
     private String perfil;
 
     public int getId() {
@@ -56,8 +60,6 @@ public class Profissional {
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
-
-
 
     public String getPerfil() {
         return perfil;

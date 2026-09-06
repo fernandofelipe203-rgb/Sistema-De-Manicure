@@ -1,7 +1,10 @@
 package com.ProjetoManicure.Manicure.service;
 
 import com.ProjetoManicure.Manicure.model.Cliente;
+import com.ProjetoManicure.Manicure.model.Profissional;
 import com.ProjetoManicure.Manicure.repository.ClienteRepository;
+import com.ProjetoManicure.Manicure.repository.ProfissionalRepository;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +15,40 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+    @Autowired
+    private ProfissionalRepository profissionalRepository;
+    @Autowired
+    private JwtService jwtService;
 
-    public List<Cliente> listar() {
-        return clienteRepository.findAll();
+    public List<Cliente> listar(String token) {
+
+        token = token.replace("Bearer ", "");
+
+        Claims claims = jwtService.validarToken(token);
+
+        int profissionalId = claims.get("id", Integer.class);
+
+        return clienteRepository.findByProfissionalId(profissionalId);
     }
 
     public Cliente buscarPorId(int id) {
         return clienteRepository.findById(id).orElse(null);
     }
 
-    public Cliente cadastrar(Cliente cliente) {
+    public Cliente cadastrar(Cliente cliente, String token) {
+
+        token = token.replace("Bearer ", "");
+
+        Claims claims = jwtService.validarToken(token);
+
+        int profissionalId = claims.get("id", Integer.class);
+
+        Profissional profissional = profissionalRepository
+                .findById(profissionalId)
+                .orElseThrow();
+
+        cliente.setProfissional(profissional);
+
         return clienteRepository.save(cliente);
     }
 
