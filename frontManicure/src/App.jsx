@@ -1,10 +1,13 @@
 import { useState } from 'react'
 import './App.css'
+import Dashboard from './pages/Dashboard'
+import Clientes from './pages/Clientes'
 
 function App() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [logado, setLogado] = useState(false)
+  const [pagina, setPagina] = useState('dashboard')
 
   async function handleLogin(event) {
     event.preventDefault()
@@ -37,111 +40,16 @@ function App() {
       console.error(erro.message)
     }
   }
-if (logado) {
-  return (
-    <main className="dashboard">
 
-      <aside className="menu">
-        <div className="logo">
-          ✿ Manicure
-        </div>
+  if (logado) {
+   if (pagina === 'clientes') {
+     return <Clientes setPagina={setPagina} />
+   }
 
-        <nav>
-          <button>Início</button>
-          <button>Clientes</button>
-          <button>Agenda</button>
-          <button>Serviços</button>
-          <button>Financeiro</button>
-        </nav>
-
-        <button className="sair" onClick={() => {
-          localStorage.removeItem('token')
-          setLogado(false)
-        }}>
-          Sair
-        </button>
-      </aside>
-
-      <section className="conteudo">
-
-        <header className="topo">
-          <div>
-            <h1>Olá! ✨</h1>
-            <p>Tenha um ótimo dia de trabalho.</p>
-          </div>
-
-          <div className="perfil">
-            ♡
-          </div>
-        </header>
-
-        <section className="cards">
-
-          <div className="card">
-            <span>Clientes</span>
-            <strong>24</strong>
-            <small>cadastrados</small>
-          </div>
-
-          <div className="card">
-            <span>Agendamentos</span>
-            <strong>6</strong>
-            <small>hoje</small>
-          </div>
-
-          <div className="card">
-            <span>Serviços</span>
-            <strong>8</strong>
-            <small>cadastrados</small>
-          </div>
-
-        </section>
-
-        <section className="proximos">
-
-          <div className="secao-titulo">
-            <h2>Próximos atendimentos</h2>
-            <button>Ver agenda</button>
-          </div>
-
-          <div className="atendimento">
-            <div>
-              <strong>Maria Silva</strong>
-              <span>Manicure + esmaltação</span>
-            </div>
-
-            <time>14:00</time>
-          </div>
-
-          <div className="atendimento">
-            <div>
-              <strong>Ana Paula</strong>
-              <span>Alongamento de unhas</span>
-            </div>
-
-            <time>15:30</time>
-          </div>
-
-          <div className="atendimento">
-            <div>
-              <strong>Juliana</strong>
-              <span>Banho de gel</span>
-            </div>
-
-            <time>17:00</time>
-          </div>
-
-        </section>
-
-      </section>
-
-    </main>
-  )
-}
-
+    return <Dashboard setPagina={setPagina} />
+  }
 
   return (
-
     <main className="login-container">
       <div className="login-card">
 
@@ -152,6 +60,7 @@ if (logado) {
 
           <div className="campo">
             <label>E-mail</label>
+
             <input
               type="email"
               placeholder="Digite seu e-mail"
@@ -162,6 +71,7 @@ if (logado) {
 
           <div className="campo">
             <label>Senha</label>
+
             <input
               type="password"
               placeholder="Digite sua senha"
@@ -173,7 +83,6 @@ if (logado) {
           <button type="submit">
             Entrar
           </button>
-
 
         </form>
 
