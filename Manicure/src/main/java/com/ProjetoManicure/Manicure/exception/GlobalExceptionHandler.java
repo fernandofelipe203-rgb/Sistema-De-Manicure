@@ -46,4 +46,20 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(erros);
     }
+    @ExceptionHandler(ClienteDuplicadoException.class)
+    public ResponseEntity<String> tratarClienteDuplicado(
+            ClienteDuplicadoException e) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(e.getMessage());
+    }
+    @ExceptionHandler(ProfissionalDuplicadoException.class)
+    public ResponseEntity<String> tratarProfissionalDuplicado(
+            ProfissionalDuplicadoException e) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(e.getMessage());
+    }
 }

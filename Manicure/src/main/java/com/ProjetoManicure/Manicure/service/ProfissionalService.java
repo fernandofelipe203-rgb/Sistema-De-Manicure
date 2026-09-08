@@ -1,5 +1,6 @@
 package com.ProjetoManicure.Manicure.service;
 
+import com.ProjetoManicure.Manicure.exception.ProfissionalDuplicadoException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.ProjetoManicure.Manicure.model.Profissional;
 import com.ProjetoManicure.Manicure.repository.ProfissionalRepository;
@@ -27,6 +28,13 @@ public class ProfissionalService {
 
     public Profissional cadastrar(Profissional profissional) {
 
+        if (profissionalRepository.findByEmail(profissional.getEmail()).isPresent()) {
+
+            throw new ProfissionalDuplicadoException(
+                    "Já existe uma profissional cadastrada com este e-mail."
+            );
+        }
+
         profissional.setSenha(
                 passwordEncoder.encode(profissional.getSenha())
         );
@@ -41,6 +49,13 @@ public class ProfissionalService {
 
         if (profissional == null) {
             return null;
+        }
+        if (profissionalRepository.existsByEmailAndIdNot(
+                dados.getEmail(), id)) {
+
+            throw new ProfissionalDuplicadoException(
+                    "Já existe uma profissional cadastrada com este e-mail."
+            );
         }
 
         profissional.setNome(dados.getNome());

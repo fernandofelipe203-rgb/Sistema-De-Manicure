@@ -13,7 +13,7 @@ function App() {
     event.preventDefault()
 
     try {
-      const resposta = await fetch('http://localhost:8080/auth/login', {
+      const resposta = await fetch('http://192.168.1.5:8080/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -3,6 +3,7 @@ package com.ProjetoManicure.Manicure.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "clientes")
@@ -15,6 +16,10 @@ public class Cliente {
     private String nome;
 
     @NotBlank(message = "Telefone é obrigatório")
+    @Pattern(
+            regexp = "\\d{11}",
+            message = "Telefone deve conter 11 números"
+    )
     private String telefone;
 
     @Email(message = "E-mail inválido")

@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ProfissionalRepository  extends JpaRepository <Profissional, Integer> {
     Optional<Profissional> findByEmail(String email);
+    boolean existsByEmailAndIdNot(String email, int id);
 }

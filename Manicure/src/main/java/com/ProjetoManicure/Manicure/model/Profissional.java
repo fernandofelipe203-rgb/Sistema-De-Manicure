@@ -1,8 +1,10 @@
 package com.ProjetoManicure.Manicure.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "profissionais")
@@ -12,13 +14,25 @@ public class Profissional {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotBlank(message = "Nome é obrigatório")
     private String nome;
+
+    @NotBlank(message = "E-mail é obrigatório")
+    @Email(message = "E-mail inválido")
     private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotBlank(message = "Senha é obrigatória")
     private String senha;
 
+    @NotBlank(message = "Telefone é obrigatório")
+    @Pattern(
+            regexp = "\\d{11}",
+            message = "Telefone deve conter 11 números"
+    )
     private String telefone;
+
+    @NotBlank(message = "Perfil é obrigatório")
     private String perfil;
 
     public int getId() {

@@ -1,5 +1,6 @@
 package com.ProjetoManicure.Manicure.service;
 
+import com.ProjetoManicure.Manicure.exception.ClienteDuplicadoException;
 import com.ProjetoManicure.Manicure.exception.ClienteNaoEncontradoException;
 import com.ProjetoManicure.Manicure.model.Cliente;
 import com.ProjetoManicure.Manicure.model.Profissional;
@@ -60,6 +61,24 @@ public class ClienteService {
 
         cliente.setProfissional(profissional);
 
+        if (clienteRepository.existsByProfissionalIdAndTelefone(
+                profissionalId,
+                cliente.getTelefone())) {
+
+            throw new ClienteDuplicadoException(
+                    "Já existe uma cliente cadastrada com este telefone."
+            );
+        }
+
+        if (clienteRepository.existsByProfissionalIdAndEmail(
+                profissionalId,
+                cliente.getEmail())) {
+
+            throw new ClienteDuplicadoException(
+                    "Já existe uma cliente cadastrada com este e-mail."
+            );
+        }
+
         return clienteRepository.save(cliente);
     }
 
@@ -78,6 +97,26 @@ public class ClienteService {
 
         if (cliente == null) {
             return null;
+        }
+
+        if (clienteRepository.existsByProfissionalIdAndTelefoneAndIdNot(
+                profissionalId,
+                dados.getTelefone(),
+                id)) {
+
+            throw new ClienteDuplicadoException(
+                    "Já existe uma cliente cadastrada com este telefone."
+            );
+        }
+
+        if (clienteRepository.existsByProfissionalIdAndEmailAndIdNot(
+                profissionalId,
+                dados.getEmail(),
+                id)) {
+
+            throw new ClienteDuplicadoException(
+                    "Já existe uma cliente cadastrada com este e-mail."
+            );
         }
 
         cliente.setNome(dados.getNome());

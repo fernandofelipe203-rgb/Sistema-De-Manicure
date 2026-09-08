@@ -28,7 +28,13 @@ function Sidebar({ setPagina }) {
         </button>
       </nav>
 
-      <button className="sair">
+      <button
+        className="sair"
+        onClick={() => {
+          localStorage.removeItem('token')
+          window.location.href = '/'
+        }}
+      >
         Sair
       </button>
 

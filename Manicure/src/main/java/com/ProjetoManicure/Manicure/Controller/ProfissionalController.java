@@ -2,6 +2,7 @@ package com.ProjetoManicure.Manicure.Controller;
 
 import com.ProjetoManicure.Manicure.model.Profissional;
 import com.ProjetoManicure.Manicure.service.ProfissionalService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class ProfissionalController {
 
     @PostMapping
     public ResponseEntity<Profissional> cadastrar(
-            @RequestBody Profissional profissional) {
+            @Valid @RequestBody Profissional profissional) {
 
         Profissional profissionalSalvo =
                 profissionalService.cadastrar(profissional);
@@ -46,7 +47,7 @@ public class ProfissionalController {
     @PutMapping("/{id}")
     public ResponseEntity<Profissional> atualizar(
             @PathVariable int id,
-            @RequestBody Profissional dados) {
+            @Valid @RequestBody Profissional dados) {
 
         Profissional profissionalAtualizado =
                 profissionalService.atualizar(id, dados);
