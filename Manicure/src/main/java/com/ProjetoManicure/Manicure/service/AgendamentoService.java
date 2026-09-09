@@ -36,6 +36,7 @@ public class AgendamentoService {
     }
 
     public Agendamento cadastrar(Agendamento agendamento) {
+
         if (agendamento.getDataHora().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException(
                     "Não é permitido criar agendamento em data ou horário passado."
@@ -61,13 +62,13 @@ public class AgendamentoService {
                                 )
                         );
 
-// Verifica se o cliente pertence ao profissional
+        // Verifica se o cliente pertence ao profissional
         int clienteId =
                 agendamento.getCliente().getId();
 
         Cliente cliente =
                 clienteRepository
-                        .findByIdAndProfissionalId(
+                        .findByIdAndProfissionais_Id(
                                 clienteId,
                                 profissionalId
                         )
@@ -79,9 +80,10 @@ public class AgendamentoService {
 
         agendamento.setCliente(cliente);
 
-// Guarda o preço do serviço no momento do agendamento
-        agendamento.setServico (servico);
+        // Guarda o preço do serviço no momento do agendamento
+        agendamento.setServico(servico);
         agendamento.setValor(servico.getPreco());
+
         // Verifica conflito de horário
         boolean horarioOcupado =
                 agendamentoRepository
@@ -103,14 +105,19 @@ public class AgendamentoService {
             int id,
             int profissionalId,
             Agendamento dados) {
+
         if (dados.getDataHora().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException(
                     "Não é permitido alterar o agendamento para uma data ou horário passado."
             );
         }
+
         Agendamento agendamento =
                 agendamentoRepository
-                        .findByIdAndProfissionalId(id, profissionalId)
+                        .findByIdAndProfissionalId(
+                                id,
+                                profissionalId
+                        )
                         .orElse(null);
 
         if (agendamento == null) {
@@ -130,13 +137,13 @@ public class AgendamentoService {
                                 )
                         );
 
-// Verifica se o cliente pertence ao profissional
+        // Verifica se o cliente pertence ao profissional
         int clienteId =
                 dados.getCliente().getId();
 
         Cliente cliente =
                 clienteRepository
-                        .findByIdAndProfissionalId(
+                        .findByIdAndProfissionais_Id(
                                 clienteId,
                                 profissionalId
                         )
@@ -146,7 +153,7 @@ public class AgendamentoService {
                                 )
                         );
 
-// Verifica conflito de horário
+        // Verifica conflito de horário
         boolean horarioOcupado =
                 agendamentoRepository
                         .existsByProfissionalIdAndDataHora(
@@ -185,7 +192,10 @@ public class AgendamentoService {
 
         Agendamento agendamento =
                 agendamentoRepository
-                        .findByIdAndProfissionalId(id, profissionalId)
+                        .findByIdAndProfissionalId(
+                                id,
+                                profissionalId
+                        )
                         .orElse(null);
 
         if (agendamento == null) {
@@ -196,3 +206,4 @@ public class AgendamentoService {
         return true;
     }
 }
+

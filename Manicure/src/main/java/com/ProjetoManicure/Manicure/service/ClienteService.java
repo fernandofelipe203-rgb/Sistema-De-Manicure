@@ -1,4 +1,5 @@
-package com.ProjetoManicure.Manicure.service;
+
+        package com.ProjetoManicure.Manicure.service;
 
 import com.ProjetoManicure.Manicure.exception.ClienteDuplicadoException;
 import com.ProjetoManicure.Manicure.exception.ClienteNaoEncontradoException;
@@ -10,15 +11,19 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.util.List;
+
 
 @Service
 public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
     @Autowired
     private ProfissionalRepository profissionalRepository;
+
     @Autowired
     private JwtService jwtService;
 
@@ -30,7 +35,7 @@ public class ClienteService {
 
         int profissionalId = claims.get("id", Integer.class);
 
-        return clienteRepository.findByProfissionalId(profissionalId);
+        return clienteRepository.findByProfissionais_Id(profissionalId);
     }
 
     public Cliente buscarPorId(int id, String token) {
@@ -43,11 +48,17 @@ public class ClienteService {
 
         return clienteRepository
                 .findById(id)
-                .filter(cliente -> cliente.getProfissional().getId() == profissionalId)
+                .filter(cliente ->
+                        cliente.getProfissionais()
+                                .stream()
+                                .anyMatch(profissional ->
+                                        profissional.getId() == profissionalId
+                                )
+                )
                 .orElseThrow(ClienteNaoEncontradoException::new);
     }
 
-    public Cliente cadastrar(Cliente cliente, String token) {
+    public Cliente cadastrar(Cliente dados, String token) {
 
         token = token.replace("Bearer ", "");
 
@@ -59,27 +70,54 @@ public class ClienteService {
                 .findById(profissionalId)
                 .orElseThrow();
 
-        cliente.setProfissional(profissional);
+        /*
+         * Verifica se a cliente já existe pelo telefone.
+         */
 
-        if (clienteRepository.existsByProfissionalIdAndTelefone(
-                profissionalId,
-                cliente.getTelefone())) {
 
-            throw new ClienteDuplicadoException(
-                    "Já existe uma cliente cadastrada com este telefone."
-            );
+        Cliente clienteExistente = clienteRepository
+                .findByTelefone(dados.getTelefone())
+                .orElse(null);
+
+
+
+
+
+        /*
+         * Se a cliente já existe...
+         */
+        if (clienteExistente != null) {
+
+
+
+            boolean jaVinculada =
+                    clienteExistente.getProfissionais()
+                            .stream()
+                            .anyMatch(p ->
+                                    p.getId() == profissionalId
+                            );
+
+            if (jaVinculada) {
+                throw new ClienteDuplicadoException(
+                        "Esta cliente já está cadastrada para este profissional."
+                );
+            }
+
+            /*
+             * Adiciona o novo profissional
+             * à cliente existente.
+             */
+            clienteExistente
+                    .getProfissionais()
+                    .add(profissional);
+
+            return clienteRepository.save(clienteExistente);
         }
 
-        if (clienteRepository.existsByProfissionalIdAndEmail(
-                profissionalId,
-                cliente.getEmail())) {
 
-            throw new ClienteDuplicadoException(
-                    "Já existe uma cliente cadastrada com este e-mail."
-            );
-        }
+        dados.getProfissionais().add(profissional);
 
-        return clienteRepository.save(cliente);
+        return clienteRepository.save(dados);
     }
 
     public Cliente atualizar(int id, Cliente dados, String token) {
@@ -92,27 +130,37 @@ public class ClienteService {
 
         Cliente cliente = clienteRepository
                 .findById(id)
-                .filter(c -> c.getProfissional().getId() == profissionalId)
+                .filter(c ->
+                        c.getProfissionais()
+                                .stream()
+                                .anyMatch(profissional ->
+                                        profissional.getId() == profissionalId
+                                )
+                )
                 .orElse(null);
 
         if (cliente == null) {
             return null;
         }
 
-        if (clienteRepository.existsByProfissionalIdAndTelefoneAndIdNot(
-                profissionalId,
-                dados.getTelefone(),
-                id)) {
+        if (clienteRepository
+                .existsByProfissionais_IdAndTelefoneAndIdNot(
+                        profissionalId,
+                        dados.getTelefone(),
+                        id
+                )) {
 
             throw new ClienteDuplicadoException(
                     "Já existe uma cliente cadastrada com este telefone."
             );
         }
 
-        if (clienteRepository.existsByProfissionalIdAndEmailAndIdNot(
-                profissionalId,
-                dados.getEmail(),
-                id)) {
+        if (clienteRepository
+                .existsByProfissionais_IdAndEmailAndIdNot(
+                        profissionalId,
+                        dados.getEmail(),
+                        id
+                )) {
 
             throw new ClienteDuplicadoException(
                     "Já existe uma cliente cadastrada com este e-mail."
@@ -136,14 +184,32 @@ public class ClienteService {
 
         Cliente cliente = clienteRepository
                 .findById(id)
-                .filter(c -> c.getProfissional().getId() == profissionalId)
+                .filter(c ->
+                        c.getProfissionais()
+                                .stream()
+                                .anyMatch(profissional ->
+                                        profissional.getId() == profissionalId
+                                )
+                )
                 .orElse(null);
 
         if (cliente == null) {
             return false;
         }
 
-        clienteRepository.delete(cliente);
+        cliente.getProfissionais().removeIf(
+                profissional -> profissional.getId() == profissionalId
+        );
+
+        if (cliente.getProfissionais().isEmpty()) {
+            clienteRepository.delete(cliente);
+        } else {
+            clienteRepository.save(cliente);
+        }
+
         return true;
     }
 }
+
+
+

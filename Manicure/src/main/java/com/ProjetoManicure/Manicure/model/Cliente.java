@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "clientes")
 public class Cliente {
@@ -25,9 +27,13 @@ public class Cliente {
     @Email(message = "E-mail inválido")
     private String email;
 
-    @ManyToOne
-    @JoinColumn(name = "profissional_id", nullable = false)
-    private Profissional profissional;
+    @ManyToMany
+    @JoinTable(
+            name = "cliente_profissional",
+            joinColumns = @JoinColumn(name = "cliente_id"),
+            inverseJoinColumns = @JoinColumn(name = "profissional_id")
+    )
+    private java.util.Set<Profissional> profissionais = new java.util.HashSet<>();
 
     public int getId() {
         return id;
@@ -61,11 +67,11 @@ public class Cliente {
         this.email = email;
     }
 
-    public Profissional getProfissional() {
-        return profissional;
+    public Set<Profissional> getProfissionais() {
+        return profissionais;
     }
 
-    public void setProfissional(Profissional profissional) {
-        this.profissional = profissional;
+    public void setProfissionais(Set<Profissional> profissionais) {
+        this.profissionais = profissionais;
     }
 }
