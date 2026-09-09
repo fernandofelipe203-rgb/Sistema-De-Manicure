@@ -44,7 +44,14 @@ function Sidebar({ pagina, setPagina }) {
           Financeiro
         </button>
 
+        <button
+          className={pagina === 'perfil' ? 'ativo' : ''}
+          onClick={() => setPagina('perfil')}
+        >
+          Meu perfil
+        </button>
       </nav>
+
 
       <button
         className="sair"

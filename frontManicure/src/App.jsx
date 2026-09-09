@@ -8,6 +8,7 @@ import Clientes from './pages/Clientes'
 import Servicos from './pages/Servicos'
 import Agenda from './pages/Agenda'
 import Financeiro from './pages/Financeiro'
+import Perfil from './pages/Perfil'
 
 function App() {
   const [email, setEmail] = useState('')
@@ -61,6 +62,9 @@ function App() {
     }
     if (pagina === 'financeiro') {
       return <Financeiro />
+    }
+    if (pagina === 'perfil') {
+      return <Perfil />
     }
 
 

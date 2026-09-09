@@ -82,4 +82,7 @@ public class ProfissionalService {
         profissionalRepository.deleteById(id);
         return true;
     }
+    public Profissional buscarPorIdDoToken(int id) {
+        return profissionalRepository.findById(id).orElse(null);
+    }
 }

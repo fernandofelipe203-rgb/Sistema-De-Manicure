@@ -371,3 +371,25 @@ export async function buscarReceitasPorPeriodo(inicio, fim) {
 
   return await resposta.json()
 }
+// =========================
+// PROFISSIONAL LOGADO
+// =========================
+
+export async function buscarMeuPerfil() {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/profissionais/me`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao buscar perfil')
+  }
+
+  return await resposta.json()
+}

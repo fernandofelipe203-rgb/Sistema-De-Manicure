@@ -2096,3 +2096,143 @@ width: 100%;
   height: 40px;
   padding: 0 18px;
 }
+/* =========================
+   PERFIL
+   ========================= */
+
+.card-perfil {
+  max-width: 850px;
+  margin: 25px auto 0;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 10px 35px rgba(190, 80, 120, 0.10);
+  border: 1px solid #f5dce6;
+}
+
+/* Avatar */
+
+.perfil-avatar {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 15px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: linear-gradient(
+    135deg,
+    #e91e63,
+    #f06292
+  );
+
+  color: white;
+  font-size: 36px;
+  font-weight: bold;
+
+  box-shadow: 0 8px 20px rgba(233, 30, 99, 0.25);
+}
+
+.card-perfil > h2 {
+  text-align: center;
+  margin: 5px 0 8px;
+
+  font-size: 27px;
+  color: #4f343d;
+}
+
+.card-perfil > span {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+
+  padding: 6px 16px;
+
+  border-radius: 20px;
+
+  background: #fde7ef;
+  color: #c2185b;
+
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Informações */
+
+.perfil-informacoes {
+  margin-top: 35px;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.perfil-informacoes > div {
+  background: #fff8fa;
+
+  border: 1px solid #f7e2e9;
+  border-radius: 16px;
+
+  padding: 20px;
+}
+
+.perfil-informacoes label {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #a47783;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.perfil-informacoes p {
+  margin: 0;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  color: #4f343d;
+
+  word-break: break-word;
+}
+
+/* =========================
+   RESPONSIVO
+   ========================= */
+
+@media (max-width: 700px) {
+
+  .card-perfil {
+    margin-top: 20px;
+    padding: 28px 20px;
+    border-radius: 20px;
+  }
+
+  .perfil-avatar {
+    width: 78px;
+    height: 78px;
+    font-size: 30px;
+  }
+
+  .card-perfil > h2 {
+    font-size: 23px;
+  }
+
+  .perfil-informacoes {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .perfil-informacoes > div {
+    padding: 17px;
+  }
+}

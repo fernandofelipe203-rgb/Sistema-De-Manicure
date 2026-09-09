@@ -1,7 +1,9 @@
 package com.ProjetoManicure.Manicure.Controller;
 
 import com.ProjetoManicure.Manicure.model.Profissional;
+import com.ProjetoManicure.Manicure.service.JwtService;
 import com.ProjetoManicure.Manicure.service.ProfissionalService;
+import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +18,32 @@ public class ProfissionalController {
 
     @Autowired
     private ProfissionalService profissionalService;
+    @Autowired
+    private JwtService jwtService;
 
     @GetMapping
     public List<Profissional> listar() {
         return profissionalService.listar();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<Profissional> meuPerfil(
+            @RequestHeader("Authorization") String token) {
+
+        token = token.replace("Bearer ", "");
+
+        Claims claims = jwtService.validarToken(token);
+
+        int profissionalId = claims.get("id", Integer.class);
+
+        Profissional profissional =
+                profissionalService.buscarPorIdDoToken(profissionalId);
+
+        if (profissional == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(profissional);
     }
 
     @GetMapping("/{id}")
