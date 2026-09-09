@@ -2059,3 +2059,40 @@ width: 100%;
   background: #bd4672;
   border-color: #bd4672;
 }
+/* =========================
+   PERÍODO PERSONALIZADO
+   ========================= */
+
+.filtro-personalizado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.filtro-personalizado input {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #f1d5df;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #625458;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.filtro-personalizado input:focus {
+  border-color: #c94f7c;
+  box-shadow: 0 0 0 3px rgba(201, 79, 124, 0.08);
+}
+
+.filtro-personalizado span {
+  color: #9b858c;
+  font-size: 13px;
+}
+
+.filtro-personalizado button {
+  height: 40px;
+  padding: 0 18px;
+}

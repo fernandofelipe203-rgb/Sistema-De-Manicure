@@ -19,6 +19,8 @@ function Financeiro() {
   const [carregando, setCarregando] = useState(true)
   const [mensagem, setMensagem] = useState('')
   const [periodo, setPeriodo] = useState('todos')
+  const [dataInicio, setDataInicio] = useState('')
+  const [dataFim, setDataFim] = useState('')
 
   useEffect(() => {
     carregarFinanceiro()
@@ -160,6 +162,39 @@ function Financeiro() {
 
     }
   }
+async function aplicarPeriodoPersonalizado() {
+
+  if (!dataInicio || !dataFim) {
+    setMensagem('Informe a data inicial e a data final')
+    return
+  }
+
+  if (dataInicio > dataFim) {
+    setMensagem('A data inicial não pode ser maior que a data final')
+    return
+  }
+
+  try {
+
+    setMensagem('')
+    setPeriodo('personalizado')
+
+    const dados =
+      await buscarReceitasPorPeriodo(
+        dataInicio,
+        dataFim
+      )
+
+    setReceitas(dados)
+
+  } catch (erro) {
+
+    setMensagem(
+      erro.message || 'Erro ao buscar período'
+    )
+
+  }
+}
 
   function formatarPreco(valor) {
 
@@ -350,7 +385,34 @@ function Financeiro() {
             >
               Este mês
             </button>
+            <div className="filtro-personalizado">
 
+              <input
+                type="date"
+                value={dataInicio}
+                onChange={(e) => setDataInicio(e.target.value)}
+              />
+
+              <span>até</span>
+
+              <input
+                type="date"
+                value={dataFim}
+                onChange={(e) => setDataFim(e.target.value)}
+              />
+
+              <button
+                className={
+                  periodo === 'personalizado'
+                    ? 'filtro-ativo'
+                    : ''
+                }
+                onClick={aplicarPeriodoPersonalizado}
+              >
+                Filtrar
+              </button>
+
+            </div>
           </div>
 
 
