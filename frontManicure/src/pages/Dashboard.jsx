@@ -1,9 +1,16 @@
+import {
+  Users,
+  CalendarDays,
+  CalendarClock,
+  Wallet
+} from 'lucide-react'
 
 import { useEffect, useState } from 'react'
 import {
   buscarClientes,
   buscarServicos,
-  buscarAgendamentos
+  buscarAgendamentos,
+  buscarTotalHoje
 } from '../services/api'
 
 function Dashboard({ setPagina }) {
@@ -11,6 +18,7 @@ function Dashboard({ setPagina }) {
   const [clientes, setClientes] = useState([])
   const [servicos, setServicos] = useState([])
   const [agendamentos, setAgendamentos] = useState([])
+  const [faturamentoHoje, setFaturamentoHoje] = useState(0)
 
   useEffect(() => {
 
@@ -21,16 +29,19 @@ function Dashboard({ setPagina }) {
         const [
           dadosClientes,
           dadosServicos,
-          dadosAgendamentos
+          dadosAgendamentos,
+          dadosFaturamentoHoje
         ] = await Promise.all([
           buscarClientes(),
           buscarServicos(),
-          buscarAgendamentos()
+          buscarAgendamentos(),
+          buscarTotalHoje()
         ])
 
         setClientes(dadosClientes)
         setServicos(dadosServicos)
         setAgendamentos(dadosAgendamentos)
+        setFaturamentoHoje(dadosFaturamentoHoje.total)
 
       } catch (erro) {
 
@@ -167,7 +178,9 @@ function Dashboard({ setPagina }) {
       <section className="cards">
 
         <div className="card">
-
+            <div className="card-icone">
+              <Users />
+            </div>
           <span>
             Clientes
           </span>
@@ -179,41 +192,60 @@ function Dashboard({ setPagina }) {
           <small>
             cadastrados
           </small>
-
         </div>
 
 
         <div className="card">
-
+            <div className="card-icone">
+              <CalendarDays />
+            </div>
           <span>
-            Agendamentos
+            Atendimentos hoje
           </span>
 
           <strong>
-            {agendamentos.length}
+            {hoje.length}
           </strong>
 
           <small>
-            cadastrados
+            agendados para hoje
           </small>
-
         </div>
 
 
         <div className="card">
-
+            <div className="card-icone">
+              <CalendarClock />
+            </div>
           <span>
-            Serviços
+            Próximos
           </span>
 
           <strong>
-            {servicos.length}
+            {proximos.length}
           </strong>
 
           <small>
-            cadastrados
+            próximos atendimentos
           </small>
+        </div>
 
+
+        <div className="card">
+            <div className="card-icone">
+              <Wallet />
+            </div>
+          <span>
+            Faturamento hoje
+          </span>
+
+          <strong>
+            R$ {Number(faturamentoHoje).toFixed(2).replace('.', ',')}
+          </strong>
+
+          <small>
+            atendimentos concluídos
+          </small>
         </div>
 
       </section>
