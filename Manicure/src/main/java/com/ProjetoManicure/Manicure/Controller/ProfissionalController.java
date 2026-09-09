@@ -1,5 +1,6 @@
 package com.ProjetoManicure.Manicure.Controller;
 
+import com.ProjetoManicure.Manicure.dto.AlterarSenhaRequest;
 import com.ProjetoManicure.Manicure.model.Profissional;
 import com.ProjetoManicure.Manicure.service.JwtService;
 import com.ProjetoManicure.Manicure.service.ProfissionalService;
@@ -93,5 +94,30 @@ public class ProfissionalController {
         }
 
         return ResponseEntity.noContent().build();
+    }
+    @PutMapping("/me/senha")
+    public ResponseEntity<?> alterarSenha(
+            @RequestHeader("Authorization") String token,
+            @RequestBody AlterarSenhaRequest dados) {
+
+        token = token.replace("Bearer ", "");
+
+        Claims claims = jwtService.validarToken(token);
+
+        int profissionalId = claims.get("id", Integer.class);
+
+        boolean alterada = profissionalService.alterarSenha(
+                profissionalId,
+                dados.getSenhaAtual(),
+                dados.getNovaSenha()
+        );
+
+        if (!alterada) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Senha atual incorreta.");
+        }
+
+        return ResponseEntity.ok("Senha alterada com sucesso.");
     }
 }

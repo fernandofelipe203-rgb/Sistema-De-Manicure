@@ -85,4 +85,27 @@ public class ProfissionalService {
     public Profissional buscarPorIdDoToken(int id) {
         return profissionalRepository.findById(id).orElse(null);
     }
+    public boolean alterarSenha(int id, String senhaAtual, String novaSenha) {
+
+        Profissional profissional =
+                profissionalRepository.findById(id).orElse(null);
+
+        if (profissional == null) {
+            return false;
+        }
+
+        // Verifica se a senha atual está correta
+        if (!passwordEncoder.matches(senhaAtual, profissional.getSenha())) {
+            return false;
+        }
+
+        // Criptografa e salva a nova senha
+        profissional.setSenha(
+                passwordEncoder.encode(novaSenha)
+        );
+
+        profissionalRepository.save(profissional);
+
+        return true;
+    }
 }
