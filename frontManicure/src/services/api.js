@@ -1,5 +1,10 @@
 const API_URL = 'http://192.168.1.5:8080'
 
+
+// =========================
+// CLIENTES
+// =========================
+
 export async function buscarClientes() {
   const token = localStorage.getItem('token')
 
@@ -38,6 +43,8 @@ export async function cadastrarCliente(cliente) {
 
   return await resposta.json()
 }
+
+
 export async function atualizarCliente(id, cliente) {
   const token = localStorage.getItem('token')
 
@@ -50,13 +57,15 @@ export async function atualizarCliente(id, cliente) {
     body: JSON.stringify(cliente)
   })
 
- if (!resposta.ok) {
-   const mensagem = await resposta.text()
-   throw new Error(mensagem || 'Erro ao atualizar cliente')
- }
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao atualizar cliente')
+  }
 
   return await resposta.json()
 }
+
+
 export async function excluirCliente(id) {
   const token = localStorage.getItem('token')
 
@@ -73,3 +82,169 @@ export async function excluirCliente(id) {
   }
 }
 
+
+// =========================
+// SERVIÇOS
+// =========================
+
+export async function buscarServicos() {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/servicos`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao buscar serviços')
+  }
+
+  return await resposta.json()
+}
+
+
+export async function cadastrarServico(servico) {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/servicos`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(servico)
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao cadastrar serviço')
+  }
+
+  return await resposta.json()
+}
+
+
+export async function atualizarServico(id, servico) {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/servicos/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(servico)
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao atualizar serviço')
+  }
+
+  return await resposta.json()
+}
+
+
+export async function excluirServico(id) {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/servicos/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao excluir serviço')
+  }
+
+}
+// =========================
+// AGENDAMENTOS
+// =========================
+
+export async function buscarAgendamentos() {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/agendamentos`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao buscar agendamentos')
+  }
+
+  return await resposta.json()
+}
+
+
+export async function cadastrarAgendamento(agendamento) {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/agendamentos`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(agendamento)
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao cadastrar agendamento')
+  }
+
+  return await resposta.json()
+}
+
+
+export async function atualizarAgendamento(id, agendamento) {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/agendamentos/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(agendamento)
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao atualizar agendamento')
+  }
+
+  return await resposta.json()
+}
+
+
+export async function excluirAgendamento(id) {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/agendamentos/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao excluir agendamento')
+  }
+}

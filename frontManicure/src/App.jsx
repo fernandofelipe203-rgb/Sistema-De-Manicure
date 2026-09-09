@@ -2,6 +2,8 @@ import { useState } from 'react'
 import './App.css'
 import Dashboard from './pages/Dashboard'
 import Clientes from './pages/Clientes'
+import Servicos from './pages/Servicos'
+import Agenda from './pages/Agenda'
 
 function App() {
   const [email, setEmail] = useState('')
@@ -13,7 +15,7 @@ function App() {
     event.preventDefault()
 
     try {
-      const resposta = await fetch('http://192.168.1.5:8080/auth/login', {
+      const resposta = await     fetch('http://192.168.1.5:8080/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -42,9 +44,18 @@ function App() {
   }
 
   if (logado) {
-   if (pagina === 'clientes') {
-     return <Clientes setPagina={setPagina} />
-   }
+
+    if (pagina === 'clientes') {
+      return <Clientes setPagina={setPagina} />
+    }
+
+    if (pagina === 'servicos') {
+      return <Servicos setPagina={setPagina} />
+    }
+
+    if (pagina === 'agenda') {
+      return <Agenda setPagina={setPagina} />
+    }
 
     return <Dashboard setPagina={setPagina} />
   }
