@@ -9,6 +9,7 @@ import com.ProjetoManicure.Manicure.repository.ServicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -35,6 +36,11 @@ public class AgendamentoService {
     }
 
     public Agendamento cadastrar(Agendamento agendamento) {
+        if (agendamento.getDataHora().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException(
+                    "Não é permitido criar agendamento em data ou horário passado."
+            );
+        }
 
         int profissionalId =
                 agendamento.getProfissional().getId();
@@ -55,9 +61,26 @@ public class AgendamentoService {
                                 )
                         );
 
-        // Garante que o serviço pertence à profissional
-        agendamento.setServico(servico);
-        // Guarda o preço do serviço no momento do agendamento
+// Verifica se o cliente pertence ao profissional
+        int clienteId =
+                agendamento.getCliente().getId();
+
+        Cliente cliente =
+                clienteRepository
+                        .findByIdAndProfissionalId(
+                                clienteId,
+                                profissionalId
+                        )
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Cliente não pertence a este profissional."
+                                )
+                        );
+
+        agendamento.setCliente(cliente);
+
+// Guarda o preço do serviço no momento do agendamento
+        agendamento.setServico (servico);
         agendamento.setValor(servico.getPreco());
         // Verifica conflito de horário
         boolean horarioOcupado =
@@ -80,7 +103,11 @@ public class AgendamentoService {
             int id,
             int profissionalId,
             Agendamento dados) {
-
+        if (dados.getDataHora().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException(
+                    "Não é permitido alterar o agendamento para uma data ou horário passado."
+            );
+        }
         Agendamento agendamento =
                 agendamentoRepository
                         .findByIdAndProfissionalId(id, profissionalId)
@@ -103,7 +130,23 @@ public class AgendamentoService {
                                 )
                         );
 
-        // Verifica conflito de horário
+// Verifica se o cliente pertence ao profissional
+        int clienteId =
+                dados.getCliente().getId();
+
+        Cliente cliente =
+                clienteRepository
+                        .findByIdAndProfissionalId(
+                                clienteId,
+                                profissionalId
+                        )
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Cliente não pertence a este profissional."
+                                )
+                        );
+
+// Verifica conflito de horário
         boolean horarioOcupado =
                 agendamentoRepository
                         .existsByProfissionalIdAndDataHora(
@@ -121,10 +164,19 @@ public class AgendamentoService {
         }
 
         agendamento.setDataHora(dados.getDataHora());
-        agendamento.setCliente(dados.getCliente());
+        agendamento.setCliente(cliente);
         agendamento.setServico(servico);
-        agendamento.setValor(servico.getPreco());
-        agendamento.setStatus(dados.getStatus());
+
+        String statusAtual = agendamento.getStatus();
+        String novoStatus = dados.getStatus();
+
+        agendamento.setStatus(novoStatus);
+
+        if (!"CONCLUIDO".equals(statusAtual)
+                && "CONCLUIDO".equals(novoStatus)) {
+
+            agendamento.setValor(servico.getPreco());
+        }
 
         return agendamentoRepository.save(agendamento);
     }

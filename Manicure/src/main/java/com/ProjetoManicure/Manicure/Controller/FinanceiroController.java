@@ -18,6 +18,10 @@ public class FinanceiroController {
     @Autowired
     private FinanceiroService financeiroService;
 
+    // =========================
+    // TODAS AS RECEITAS
+    // =========================
+
     @GetMapping
     public List<Agendamento> listarReceitas(
             HttpServletRequest request) {
@@ -29,6 +33,10 @@ public class FinanceiroController {
                 .listarReceitas(profissionalId);
     }
 
+    // =========================
+    // TOTAL GERAL
+    // =========================
+
     @GetMapping("/total")
     public Map<String, Double> calcularTotal(
             HttpServletRequest request) {
@@ -39,6 +47,75 @@ public class FinanceiroController {
         Double total =
                 financeiroService
                         .calcularTotal(profissionalId);
+
+        Map<String, Double> resposta =
+                new HashMap<>();
+
+        resposta.put("total", total);
+
+        return resposta;
+    }
+
+    // =========================
+    // TOTAL DE HOJE
+    // =========================
+
+    @GetMapping("/hoje")
+    public Map<String, Double> calcularTotalHoje(
+            HttpServletRequest request) {
+
+        int profissionalId =
+                (int) request.getAttribute("id");
+
+        Double total =
+                financeiroService
+                        .calcularTotalHoje(profissionalId);
+
+        Map<String, Double> resposta =
+                new HashMap<>();
+
+        resposta.put("total", total);
+
+        return resposta;
+    }
+
+    // =========================
+    // TOTAL DA SEMANA
+    // =========================
+
+    @GetMapping("/semana")
+    public Map<String, Double> calcularTotalSemana(
+            HttpServletRequest request) {
+
+        int profissionalId =
+                (int) request.getAttribute("id");
+
+        Double total =
+                financeiroService
+                        .calcularTotalSemana(profissionalId);
+
+        Map<String, Double> resposta =
+                new HashMap<>();
+
+        resposta.put("total", total);
+
+        return resposta;
+    }
+
+    // =========================
+    // TOTAL DO MÊS
+    // =========================
+
+    @GetMapping("/mes")
+    public Map<String, Double> calcularTotalMes(
+            HttpServletRequest request) {
+
+        int profissionalId =
+                (int) request.getAttribute("id");
+
+        Double total =
+                financeiroService
+                        .calcularTotalMes(profissionalId);
 
         Map<String, Double> resposta =
                 new HashMap<>();

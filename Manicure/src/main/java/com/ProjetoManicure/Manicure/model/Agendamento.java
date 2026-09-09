@@ -1,7 +1,9 @@
 package com.ProjetoManicure.Manicure.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDateTime;
@@ -35,7 +37,11 @@ public class Agendamento {
     @PositiveOrZero(message = "Valor não pode ser negativo")
     private Double valor;
 
-    @NotNull(message = "Status é obrigatório")
+    @NotBlank(message = "Status é obrigatório")
+    @Pattern(
+            regexp = "AGENDADO|CONFIRMADO|CONCLUIDO|CANCELADO",
+            message = "Status inválido"
+    )
     private String status;
 
     public int getId() {
