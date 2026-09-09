@@ -290,3 +290,61 @@ export async function buscarTotalFinanceiro() {
 
   return await resposta.json()
 }
+export async function buscarTotalHoje() {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/financeiro/hoje`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao buscar total de hoje')
+  }
+
+  return await resposta.json()
+}
+
+
+export async function buscarTotalSemana() {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/financeiro/semana`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao buscar total da semana')
+  }
+
+  return await resposta.json()
+}
+
+
+export async function buscarTotalMes() {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/financeiro/mes`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao buscar total do mês')
+  }
+
+  return await resposta.json()
+}

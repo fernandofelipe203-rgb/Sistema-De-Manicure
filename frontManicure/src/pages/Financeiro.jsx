@@ -1,13 +1,19 @@
 import { useEffect, useState } from 'react'
 import {
   buscarReceitas,
-  buscarTotalFinanceiro
+  buscarTotalFinanceiro,
+  buscarTotalHoje,
+  buscarTotalSemana,
+  buscarTotalMes
 } from '../services/api'
 
 function Financeiro() {
 
   const [receitas, setReceitas] = useState([])
   const [total, setTotal] = useState(0)
+  const [totalHoje, setTotalHoje] = useState(0)
+  const [totalSemana, setTotalSemana] = useState(0)
+  const [totalMes, setTotalMes] = useState(0)
   const [carregando, setCarregando] = useState(true)
   const [mensagem, setMensagem] = useState('')
 
@@ -20,15 +26,27 @@ function Financeiro() {
     try {
 
       setCarregando(true)
+      setMensagem('')
 
-      const [dadosReceitas, dadosTotal] =
-        await Promise.all([
-          buscarReceitas(),
-          buscarTotalFinanceiro()
-        ])
+      const [
+        dadosReceitas,
+        dadosTotal,
+        dadosHoje,
+        dadosSemana,
+        dadosMes
+      ] = await Promise.all([
+        buscarReceitas(),
+        buscarTotalFinanceiro(),
+        buscarTotalHoje(),
+        buscarTotalSemana(),
+        buscarTotalMes()
+      ])
 
       setReceitas(dadosReceitas)
       setTotal(dadosTotal.total)
+      setTotalHoje(dadosHoje.total)
+      setTotalSemana(dadosSemana.total)
+      setTotalMes(dadosMes.total)
 
     } catch (erro) {
 
@@ -122,19 +140,58 @@ function Financeiro() {
 
             </div>
 
+
             <div className="card-financeiro">
 
               <div className="card-financeiro-icone">
-                ✓
+                📅
               </div>
 
               <div>
                 <span>
-                  Atendimentos concluídos
+                  Hoje
                 </span>
 
                 <strong>
-                  {receitas.length}
+                  {formatarPreco(totalHoje)}
+                </strong>
+              </div>
+
+            </div>
+
+
+            <div className="card-financeiro">
+
+              <div className="card-financeiro-icone">
+                📆
+              </div>
+
+              <div>
+                <span>
+                  Esta semana
+                </span>
+
+                <strong>
+                  {formatarPreco(totalSemana)}
+                </strong>
+              </div>
+
+            </div>
+
+
+            <div className="card-financeiro">
+
+              <div className="card-financeiro-icone">
+                🗓️
+              </div>
+
+              <div>
+                <span>
+                  Este mês
+                </span>
+
+                <strong>
+                  {formatarPreco(totalMes)}
                 </strong>
               </div>
 
@@ -158,6 +215,7 @@ function Financeiro() {
               </div>
 
             </div>
+
 
             {receitas.length === 0 ? (
 
@@ -198,6 +256,7 @@ function Financeiro() {
                       <tr key={agendamento.id}>
 
                         <td>
+
                           <div className="data-agendamento">
 
                             <div className="data">
@@ -213,30 +272,41 @@ function Financeiro() {
                             </div>
 
                           </div>
+
                         </td>
 
+
                         <td>
+
                           <strong>
                             {agendamento.cliente.nome}
                           </strong>
+
                         </td>
+
 
                         <td>
                           {agendamento.servico.nome}
                         </td>
 
+
                         <td>
+
                           <span className="status status-concluido">
                             Concluído
                           </span>
+
                         </td>
 
+
                         <td>
+
                           <strong className="valor-receita">
                             {formatarPreco(
                               agendamento.valor
                             )}
                           </strong>
+
                         </td>
 
                       </tr>
