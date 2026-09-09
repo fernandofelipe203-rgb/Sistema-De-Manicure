@@ -248,3 +248,45 @@ export async function excluirAgendamento(id) {
     throw new Error(mensagem || 'Erro ao excluir agendamento')
   }
 }
+// =========================
+// FINANCEIRO
+// =========================
+
+export async function buscarReceitas() {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/financeiro`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao buscar receitas')
+  }
+
+  return await resposta.json()
+}
+
+
+export async function buscarTotalFinanceiro() {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/financeiro/total`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao buscar total financeiro')
+  }
+
+  return await resposta.json()
+}

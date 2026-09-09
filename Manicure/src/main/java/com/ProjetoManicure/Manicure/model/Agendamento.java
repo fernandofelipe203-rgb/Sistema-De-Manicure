@@ -2,6 +2,7 @@ package com.ProjetoManicure.Manicure.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.time.LocalDateTime;
 
@@ -30,6 +31,9 @@ public class Agendamento {
     @ManyToOne
     @JoinColumn(name = "profissional_id", nullable = false)
     private Profissional profissional;
+
+    @PositiveOrZero(message = "Valor não pode ser negativo")
+    private Double valor;
 
     @NotNull(message = "Status é obrigatório")
     private String status;
@@ -81,4 +85,13 @@ public class Agendamento {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public @PositiveOrZero(message = "Valor não pode ser negativo") Double getValor() {
+        return valor;
+    }
+
+    public void setValor(@PositiveOrZero(message = "Valor não pode ser negativo") Double valor) {
+        this.valor = valor;
+    }
+
 }

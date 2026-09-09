@@ -57,7 +57,8 @@ public class AgendamentoService {
 
         // Garante que o serviço pertence à profissional
         agendamento.setServico(servico);
-
+        // Guarda o preço do serviço no momento do agendamento
+        agendamento.setValor(servico.getPreco());
         // Verifica conflito de horário
         boolean horarioOcupado =
                 agendamentoRepository
@@ -122,6 +123,7 @@ public class AgendamentoService {
         agendamento.setDataHora(dados.getDataHora());
         agendamento.setCliente(dados.getCliente());
         agendamento.setServico(servico);
+        agendamento.setValor(servico.getPreco());
         agendamento.setStatus(dados.getStatus());
 
         return agendamentoRepository.save(agendamento);

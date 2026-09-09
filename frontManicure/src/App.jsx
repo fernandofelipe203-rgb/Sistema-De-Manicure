@@ -1,9 +1,13 @@
 import { useState } from 'react'
 import './App.css'
+
+import Layout from './components/Layout'
+
 import Dashboard from './pages/Dashboard'
 import Clientes from './pages/Clientes'
 import Servicos from './pages/Servicos'
 import Agenda from './pages/Agenda'
+import Financeiro from './pages/Financeiro'
 
 function App() {
   const [email, setEmail] = useState('')
@@ -15,7 +19,7 @@ function App() {
     event.preventDefault()
 
     try {
-      const resposta = await     fetch('http://192.168.1.5:8080/auth/login', {
+      const resposta = await fetch('http://192.168.1.5:8080/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -43,21 +47,35 @@ function App() {
     }
   }
 
-  if (logado) {
-
+  function renderizarPagina() {
     if (pagina === 'clientes') {
-      return <Clientes setPagina={setPagina} />
+      return <Clientes />
     }
 
     if (pagina === 'servicos') {
-      return <Servicos setPagina={setPagina} />
+      return <Servicos />
     }
 
     if (pagina === 'agenda') {
-      return <Agenda setPagina={setPagina} />
+      return <Agenda />
+    }
+    if (pagina === 'financeiro') {
+      return <Financeiro />
     }
 
+
     return <Dashboard setPagina={setPagina} />
+  }
+
+  if (logado) {
+    return (
+      <Layout
+        pagina={pagina}
+        setPagina={setPagina}
+      >
+        {renderizarPagina()}
+      </Layout>
+    )
   }
 
   return (
@@ -103,3 +121,4 @@ function App() {
 }
 
 export default App
+

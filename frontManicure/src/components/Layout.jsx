@@ -1,11 +1,15 @@
+
 import Sidebar from './Sidebar'
 import Header from './Header'
 
-function Layout({ children, setPagina }) {
+function Layout({ children, pagina, setPagina }) {
   return (
     <main className="dashboard">
 
-      <Sidebar setPagina={setPagina} />
+      <Sidebar
+        pagina={pagina}
+        setPagina={setPagina}
+      />
 
       <section className="conteudo">
 
@@ -20,3 +24,4 @@ function Layout({ children, setPagina }) {
 }
 
 export default Layout
+

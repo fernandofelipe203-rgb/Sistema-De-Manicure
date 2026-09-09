@@ -1,4 +1,5 @@
-function Sidebar({ setPagina }) {
+
+function Sidebar({ pagina, setPagina }) {
   return (
     <aside className="menu">
 
@@ -7,25 +8,42 @@ function Sidebar({ setPagina }) {
       </div>
 
       <nav>
-        <button onClick={() => setPagina('dashboard')}>
+
+        <button
+          className={pagina === 'dashboard' ? 'ativo' : ''}
+          onClick={() => setPagina('dashboard')}
+        >
           Início
         </button>
 
-        <button onClick={() => setPagina('clientes')}>
+        <button
+          className={pagina === 'clientes' ? 'ativo' : ''}
+          onClick={() => setPagina('clientes')}
+        >
           Clientes
         </button>
 
-        <button onClick={() => setPagina('agenda')}>
+        <button
+          className={pagina === 'agenda' ? 'ativo' : ''}
+          onClick={() => setPagina('agenda')}
+        >
           Agenda
         </button>
 
-        <button onClick={() => setPagina('servicos')}>
+        <button
+          className={pagina === 'servicos' ? 'ativo' : ''}
+          onClick={() => setPagina('servicos')}
+        >
           Serviços
         </button>
 
-        <button onClick={() => setPagina('financeiro')}>
+        <button
+          className={pagina === 'financeiro' ? 'ativo' : ''}
+          onClick={() => setPagina('financeiro')}
+        >
           Financeiro
         </button>
+
       </nav>
 
       <button
@@ -43,3 +61,4 @@ function Sidebar({ setPagina }) {
 }
 
 export default Sidebar
+

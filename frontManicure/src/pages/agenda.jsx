@@ -91,6 +91,17 @@ function Agenda() {
 
   async function salvarAgendamento(e) {
     e.preventDefault()
+        const hoje = obterDataMinima()
+
+        if (data < hoje) {
+
+          mostrarMensagem(
+            'Não é possível agendar para uma data anterior a hoje.',
+            'erro'
+          )
+
+          return
+        }
 
     const dados = {
       dataHora: `${data}T${hora}`,
@@ -182,6 +193,17 @@ function formatarHora(dataHora) {
     hour: '2-digit',
     minute: '2-digit'
   })
+}
+function obterDataMinima() {
+
+  const hoje = new Date()
+
+  const ano = hoje.getFullYear()
+  const mes = String(hoje.getMonth() + 1).padStart(2, '0')
+  const dia = String(hoje.getDate()).padStart(2, '0')
+
+  return `${ano}-${mes}-${dia}`
+
 }
 
   return (
@@ -426,6 +448,7 @@ function formatarHora(dataHora) {
                   <input
                     type="date"
                     value={data}
+                    min={obterDataMinima()}
                     onChange={(e) =>
                       setData(e.target.value)
                     }
