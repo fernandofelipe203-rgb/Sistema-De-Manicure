@@ -1,10 +1,12 @@
+
 import { useEffect, useState } from 'react'
 import {
   buscarReceitas,
   buscarTotalFinanceiro,
   buscarTotalHoje,
   buscarTotalSemana,
-  buscarTotalMes
+  buscarTotalMes,
+  buscarReceitasPorPeriodo
 } from '../services/api'
 
 function Financeiro() {
@@ -16,6 +18,7 @@ function Financeiro() {
   const [totalMes, setTotalMes] = useState(0)
   const [carregando, setCarregando] = useState(true)
   const [mensagem, setMensagem] = useState('')
+  const [periodo, setPeriodo] = useState('todos')
 
   useEffect(() => {
     carregarFinanceiro()
@@ -57,6 +60,103 @@ function Financeiro() {
     } finally {
 
       setCarregando(false)
+
+    }
+  }
+
+  async function aplicarFiltro(novoPeriodo) {
+
+    try {
+
+      setPeriodo(novoPeriodo)
+      setMensagem('')
+
+      if (novoPeriodo === 'todos') {
+
+        const dados = await buscarReceitas()
+
+        setReceitas(dados)
+
+        return
+      }
+
+      const hoje = new Date()
+
+      let inicio
+      let fim
+
+      if (novoPeriodo === 'hoje') {
+
+        inicio = hoje
+        fim = hoje
+
+      }
+
+      if (novoPeriodo === 'semana') {
+
+        const diaSemana = hoje.getDay()
+
+        const diferenca =
+          diaSemana === 0 ? 6 : diaSemana - 1
+
+        inicio = new Date(hoje)
+
+        inicio.setDate(
+          hoje.getDate() - diferenca
+        )
+
+        fim = new Date(inicio)
+
+        fim.setDate(
+          inicio.getDate() + 6
+        )
+
+      }
+
+      if (novoPeriodo === 'mes') {
+
+        inicio = new Date(
+          hoje.getFullYear(),
+          hoje.getMonth(),
+          1
+        )
+
+        fim = new Date(
+          hoje.getFullYear(),
+          hoje.getMonth() + 1,
+          0
+        )
+
+      }
+
+      const formatarDataAPI = (data) => {
+
+        const ano = data.getFullYear()
+
+        const mes = String(
+          data.getMonth() + 1
+        ).padStart(2, '0')
+
+        const dia = String(
+          data.getDate()
+        ).padStart(2, '0')
+
+        return `${ano}-${mes}-${dia}`
+      }
+
+      const dados =
+        await buscarReceitasPorPeriodo(
+          formatarDataAPI(inicio),
+          formatarDataAPI(fim)
+        )
+
+      setReceitas(dados)
+
+    } catch (erro) {
+
+      setMensagem(
+        erro.message || 'Erro ao aplicar filtro'
+      )
 
     }
   }
@@ -104,11 +204,13 @@ function Financeiro() {
 
       </div>
 
+
       {mensagem && (
         <div className="mensagem erro">
           {mensagem}
         </div>
       )}
+
 
       {carregando ? (
 
@@ -200,11 +302,64 @@ function Financeiro() {
           </div>
 
 
+          <div className="filtros-financeiro">
+
+            <button
+              className={
+                periodo === 'todos'
+                  ? 'filtro-ativo'
+                  : ''
+              }
+              onClick={() => aplicarFiltro('todos')}
+            >
+              Todos
+            </button>
+
+
+            <button
+              className={
+                periodo === 'hoje'
+                  ? 'filtro-ativo'
+                  : ''
+              }
+              onClick={() => aplicarFiltro('hoje')}
+            >
+              Hoje
+            </button>
+
+
+            <button
+              className={
+                periodo === 'semana'
+                  ? 'filtro-ativo'
+                  : ''
+              }
+              onClick={() => aplicarFiltro('semana')}
+            >
+              Esta semana
+            </button>
+
+
+            <button
+              className={
+                periodo === 'mes'
+                  ? 'filtro-ativo'
+                  : ''
+              }
+              onClick={() => aplicarFiltro('mes')}
+            >
+              Este mês
+            </button>
+
+          </div>
+
+
           <div className="card-tabela">
 
             <div className="secao-cabecalho">
 
               <div>
+
                 <h2>
                   Recebimentos
                 </h2>
@@ -212,6 +367,7 @@ function Financeiro() {
                 <p>
                   Atendimentos concluídos
                 </p>
+
               </div>
 
             </div>
@@ -248,6 +404,7 @@ function Financeiro() {
                     </tr>
 
                   </thead>
+
 
                   <tbody>
 
@@ -332,3 +489,4 @@ function Financeiro() {
 }
 
 export default Financeiro
+

@@ -2020,3 +2020,42 @@ width: 100%;
   }
 
 }
+/* =========================
+   FILTROS FINANCEIRO
+   ========================= */
+
+.filtros-financeiro {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filtros-financeiro button {
+  border: 1px solid #f1d5df;
+  background: #ffffff;
+  color: #9b6879;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filtros-financeiro button:hover {
+  background: #fff1f5;
+  border-color: #e9a8bd;
+}
+
+.filtros-financeiro .filtro-ativo {
+  background: #c94f7c;
+  color: #ffffff;
+  border-color: #c94f7c;
+  box-shadow: 0 4px 10px rgba(201, 79, 124, 0.18);
+}
+
+.filtros-financeiro .filtro-ativo:hover {
+  background: #bd4672;
+  border-color: #bd4672;
+}

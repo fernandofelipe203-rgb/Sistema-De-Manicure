@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,5 +124,21 @@ public class FinanceiroController {
         resposta.put("total", total);
 
         return resposta;
+    }
+    @GetMapping("/periodo")
+    public List<Agendamento> listarReceitasPorPeriodo(
+            @RequestParam LocalDate inicio,
+            @RequestParam LocalDate fim,
+            HttpServletRequest request) {
+
+        int profissionalId =
+                (int) request.getAttribute("id");
+
+        return financeiroService
+                .listarReceitasPorPeriodo(
+                        profissionalId,
+                        inicio,
+                        fim
+                );
     }
 }

@@ -348,3 +348,26 @@ export async function buscarTotalMes() {
 
   return await resposta.json()
 }
+export async function buscarReceitasPorPeriodo(inicio, fim) {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(
+    `${API_URL}/financeiro/periodo?inicio=${inicio}&fim=${fim}`,
+    {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  )
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(
+      mensagem || 'Erro ao buscar receitas por período'
+    )
+  }
+
+  return await resposta.json()
+}
