@@ -26,6 +26,7 @@ function Financeiro() {
   const [despesas, setDespesas] = useState([])
   const [despesaEditando, setDespesaEditando] = useState(null)
   const [novaDespesa, setNovaDespesa] = useState(null)
+  const [despesaParaExcluir, setDespesaParaExcluir] = useState(null)
 
   const [resumoFinanceiro, setResumoFinanceiro] = useState({
     recebimentos: 0,
@@ -326,47 +327,53 @@ function Financeiro() {
 
   async function excluirDespesa(id) {
 
-    const confirmar = window.confirm(
-      'Tem certeza que deseja excluir esta despesa?'
+    setDespesaParaExcluir(id)
+
+  }
+async function confirmarExclusao() {
+
+  if (!despesaParaExcluir) return
+
+  try {
+
+    setMensagem('')
+
+    const despesaExcluida = despesas.find(
+      (despesa) => despesa.id === despesaParaExcluir
     )
 
-    if (!confirmar) {
-      return
-    }
+    await excluirDespesaAPI(despesaParaExcluir)
 
-    try {
-
-      setMensagem('')
-
-      const despesaExcluida = despesas.find(
-        (despesa) => despesa.id === id
+    setDespesas(
+      despesas.filter(
+        (despesa) => despesa.id !== despesaParaExcluir
       )
+    )
 
-      await excluirDespesaAPI(id)
+    setResumoFinanceiro((atual) => ({
+      ...atual,
+      despesas:
+        atual.despesas -
+        Number(despesaExcluida?.valor || 0),
+      lucro:
+        atual.lucro +
+        Number(despesaExcluida?.valor || 0)
+    }))
 
-      setDespesas(
-        despesas.filter(
-          (despesa) => despesa.id !== id
-        )
-      )
+    setDespesaParaExcluir(null)
 
-      setResumoFinanceiro((atual) => ({
-        ...atual,
-        despesas:
-          atual.despesas -
-          Number(despesaExcluida?.valor || 0),
-        lucro:
-          atual.lucro +
-          Number(despesaExcluida?.valor || 0)
-      }))
+    setMensagem('Despesa excluída com sucesso.')
 
-    } catch (erro) {
+  } catch (erro) {
 
-      setMensagem(
-        erro.message || 'Erro ao excluir despesa'
-      )
-    }
+    setMensagem(
+      erro.message || 'Erro ao excluir despesa'
+    )
   }
+}
+function cancelarExclusao() {
+  setDespesaParaExcluir(null)
+}
 
   function iniciarEdicaoDespesa(despesa) {
 
@@ -1171,10 +1178,46 @@ function Financeiro() {
 
         </>
 
-      )}
+            )}
 
-    </div>
-  )
+            {despesaParaExcluir && (
+              <div className="confirmacao-exclusao">
+
+                <div className="confirmacao-card">
+
+                  <h3>
+                    Excluir despesa?
+                  </h3>
+
+                  <p>
+                    Tem certeza que deseja excluir esta despesa?
+                  </p>
+
+                  <div className="confirmacao-botoes">
+
+                    <button
+                      type="button"
+                      onClick={cancelarExclusao}
+                    >
+                      Cancelar
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={confirmarExclusao}
+                    >
+                      Excluir
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+            )}
+
+          </div>
+        )
 }
 
 export default Financeiro

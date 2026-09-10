@@ -153,12 +153,39 @@ public class ProfissionalService {
         return true;
     }
     public Profissional salvarFoto(int id, MultipartFile arquivo) throws IOException {
+        System.out.println("=== UPLOAD DE FOTO ===");
+        System.out.println("Nome: " + arquivo.getOriginalFilename());
+        System.out.println("Tipo: " + arquivo.getContentType());
+        System.out.println("Tamanho: " + arquivo.getSize());
 
         Profissional profissional =
                 profissionalRepository.findById(id).orElse(null);
 
         if (profissional == null) {
             return null;
+        }
+
+        // Verifica se o arquivo está vazio
+        if (arquivo.isEmpty()) {
+            throw new IllegalArgumentException("Nenhuma foto foi enviada.");
+        }
+
+        // Limite de 5 MB
+        long tamanhoMaximo = 5 * 1024 * 1024;
+
+        if (arquivo.getSize() > tamanhoMaximo) {
+            throw new IllegalArgumentException(
+                    "A foto deve ter no máximo 5 MB."
+            );
+        }
+
+        // Verifica se é uma imagem
+        String tipo = arquivo.getContentType();
+
+        if (tipo == null || !tipo.startsWith("image/")) {
+            throw new IllegalArgumentException(
+                    "O arquivo enviado precisa ser uma imagem."
+            );
         }
 
         String nomeArquivo =

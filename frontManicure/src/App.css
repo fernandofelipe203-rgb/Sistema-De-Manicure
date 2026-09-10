@@ -140,14 +140,29 @@ button {
   background: #fce5ed;
   color: #c63f70;
 }
-
 .sair {
   margin-top: auto;
+  width: 100%;
+  padding: 12px 18px;
+
+  border: 1px solid #e8b8c7 !important;
+  border-radius: 12px;
+
+  background: #fff7f9 !important;
+  color: #ad315e !important;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
 }
 
 .sair:hover {
   background: #fff0f3 !important;
   color: #ad315e !important;
+  border-color: #d98aa4 !important;
 }
 
 
@@ -372,38 +387,96 @@ button {
 /* =========================
    RESPONSIVIDADE
    ========================= */
-
 @media (max-width: 750px) {
+.menu nav button.ativo {
+  color: #d94f7d;
+  background: #fff0f5;
+  font-weight: 600;
+  border-radius: 12px;
+}
+.menu {
+  transition: transform 0.3s ease;
+}
+
+.menu:not(.mostrar-menu) {
+  transform: translateY(100%);
+}
+
+.menu.mostrar-menu {
+  transform: translateY(0);
+}
 
   .dashboard {
     display: block;
+    padding-bottom: 125px;
   }
 
+  /* =========================
+     MENU MOBILE
+     ========================= */
+
   .menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
     width: 100%;
     min-height: auto;
-    padding: 18px;
+    padding: 8px 8px 10px;
     border-right: none;
-    border-bottom: 1px solid #f0dfe5;
+    border-top: 1px solid #f0dfe5;
+    border-bottom: none;
+    background: #ffffff;
+    z-index: 1000;
+    box-shadow: 0 -4px 15px rgba(80, 40, 55, 0.08);
   }
 
   .logo {
-    margin-bottom: 15px;
-  }
-
-  .menu nav {
-    flex-direction: row;
-    overflow-x: auto;
-    padding-bottom: 3px;
-  }
-
-  .menu button {
-    white-space: nowrap;
-  }
-
-  .sair {
     display: none;
   }
+
+  /* Abas */
+
+  .menu nav {
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+  }
+
+  .menu nav button {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 3px;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+
+  /* =========================
+     SAIR SEPARADO
+     ========================= */
+
+  .sair {
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    padding: 7px 18px;
+
+    border: 1px solid #e8b8c7 !important;
+    border-radius: 10px;
+
+    background: #fff7f9 !important;
+    color: #ad315e !important;
+
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* =========================
+     CONTEÚDO
+     ========================= */
 
   .conteudo {
     padding: 25px 18px;
@@ -2902,4 +2975,81 @@ width: 100%;
     grid-template-columns: 1fr;
     gap: 14px;
   }
+}
+/* =========================
+   CONFIRMAÇÃO DE EXCLUSÃO
+   ========================= */
+
+.confirmacao-exclusao {
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(40, 20, 30, 0.35);
+
+  z-index: 1000;
+  padding: 20px;
+}
+
+.confirmacao-card {
+  width: 100%;
+  max-width: 420px;
+
+  background: #ffffff;
+  border-radius: 20px;
+
+  padding: 28px;
+
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+
+  text-align: center;
+}
+
+.confirmacao-card h3 {
+  margin: 0 0 10px;
+
+  font-size: 20px;
+  color: #4d3940;
+}
+
+.confirmacao-card p {
+  margin: 0 0 25px;
+
+  font-size: 14px;
+  color: #806c73;
+}
+
+.confirmacao-botoes {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.confirmacao-botoes button {
+  border: none;
+  border-radius: 10px;
+
+  padding: 11px 22px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.confirmacao-botoes button:first-child {
+  background: #f4edef;
+  color: #705b63;
+}
+
+.confirmacao-botoes button:last-child {
+  background: #d94f78;
+  color: white;
+}
+
+.confirmacao-botoes button:hover {
+  opacity: 0.9;
 }

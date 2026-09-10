@@ -79,7 +79,6 @@ public class ProfissionalController {
         Claims claims = jwtService.validarToken(token);
 
         int profissionalId = claims.get("id", Integer.class);
-
         try {
 
             Profissional profissional =
@@ -90,6 +89,12 @@ public class ProfissionalController {
             }
 
             return ResponseEntity.ok(profissional);
+
+        } catch (IllegalArgumentException e) {
+
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
 
         } catch (IOException e) {
 

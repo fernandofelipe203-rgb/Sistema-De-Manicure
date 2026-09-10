@@ -159,7 +159,7 @@ async function handleAlterarFoto(event) {
 
     console.error(erro)
 
-    alert('Não foi possível alterar a foto.')
+    alert(erro.message || 'Não foi possível alterar a foto.')
   }
 }
   return (

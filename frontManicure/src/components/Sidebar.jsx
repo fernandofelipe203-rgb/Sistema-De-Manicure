@@ -1,7 +1,29 @@
 
+import { useEffect, useState } from 'react'
+
 function Sidebar({ pagina, setPagina }) {
+
+  const [mostrarMenu, setMostrarMenu] = useState(false)
+
+  useEffect(() => {
+
+    const controlarScroll = () => {
+      if (window.scrollY > 50) {
+        setMostrarMenu(true)
+      } else {
+        setMostrarMenu(false)
+      }
+    }
+
+    window.addEventListener('scroll', controlarScroll)
+
+    return () => {
+      window.removeEventListener('scroll', controlarScroll)
+    }
+
+  }, [])
   return (
-    <aside className="menu">
+    <aside className={`menu ${mostrarMenu ? 'mostrar-menu' : ''}`}>
 
       <div className="logo">
         ✿ Manicure
