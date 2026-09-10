@@ -25,9 +25,11 @@ function Agenda() {
   const [data, setData] = useState('')
   const [hora, setHora] = useState('')
   const [status, setStatus] = useState('AGENDADO')
-
   const [mensagem, setMensagem] = useState('')
   const [tipoMensagem, setTipoMensagem] = useState('')
+  const [filtroData, setFiltroData] = useState('')
+  const [filtroCliente, setFiltroCliente] = useState('')
+  const [filtroStatus, setFiltroStatus] = useState('')
 
   useEffect(() => {
     carregarDados()
@@ -205,8 +207,29 @@ function obterDataMinima() {
   return `${ano}-${mes}-${dia}`
 
 }
+function filtrarAgendamentos() {
 
-  return (
+  return agendamentos.filter((agendamento) => {
+
+    const correspondeData =
+      !filtroData ||
+      agendamento.dataHora.startsWith(filtroData)
+
+    const correspondeCliente =
+      !filtroCliente ||
+      agendamento.cliente.id === Number(filtroCliente)
+
+    const correspondeStatus =
+      !filtroStatus ||
+      agendamento.status === filtroStatus
+
+    return correspondeData && correspondeCliente && correspondeStatus
+  })
+}
+
+const agendamentosFiltrados = filtrarAgendamentos()
+
+return (
     <div className="pagina">
 
       <div className="pagina-cabecalho">
@@ -230,6 +253,66 @@ function obterDataMinima() {
           {mensagem}
         </div>
       )}
+  <div className="filtros-agenda">
+
+    <div className="filtro-agenda">
+      <label>Filtrar por data</label>
+
+      <input
+        type="date"
+        value={filtroData}
+        onChange={(e) => setFiltroData(e.target.value)}
+      />
+    </div>
+    <div className="filtro-agenda">
+      <label>Filtrar por cliente</label>
+
+      <select
+        value={filtroCliente}
+        onChange={(e) => setFiltroCliente(e.target.value)}
+      >
+        <option value="">Todas as clientes</option>
+
+        {clientes.map((cliente) => (
+          <option
+            key={cliente.id}
+            value={cliente.id}
+          >
+            {cliente.nome}
+          </option>
+        ))}
+      </select>
+    </div>
+    <div className="filtro-agenda">
+      <label>Filtrar por status</label>
+
+      <select
+        value={filtroStatus}
+        onChange={(e) => setFiltroStatus(e.target.value)}
+      >
+        <option value="">Todos os status</option>
+
+        <option value="AGENDADO">Agendado</option>
+        <option value="CONFIRMADO">Confirmado</option>
+        <option value="CONCLUIDO">Concluído</option>
+        <option value="CANCELADO">Cancelado</option>
+      </select>
+    </div>
+
+    {(filtroData || filtroCliente) && (
+      <button
+        className="botao-limpar-filtro"
+        onClick={() => {
+          setFiltroData('')
+          setFiltroCliente('')
+           setFiltroStatus('')
+        }}
+      >
+        Limpar filtro
+      </button>
+    )}
+
+  </div>
 
       <div className="card-tabela">
 
@@ -240,14 +323,19 @@ function obterDataMinima() {
           </div>
 
         ) : agendamentos.length === 0 ? (
-
           <div className="estado">
             <h3>Nenhum agendamento</h3>
             <p>
               Crie seu primeiro agendamento.
             </p>
           </div>
-
+        ) : agendamentosFiltrados.length === 0 ? (
+          <div className="estado">
+            <h3>Nenhum agendamento encontrado</h3>
+            <p>
+              Não existem atendimentos para a data selecionada.
+            </p>
+          </div>
         ) : (
 
           <div className="tabela-container">
@@ -266,7 +354,7 @@ function obterDataMinima() {
 
               <tbody>
 
-                {agendamentos.map((agendamento) => (
+                {agendamentosFiltrados.map((agendamento) => (
 
                   <tr key={agendamento.id}>
 
