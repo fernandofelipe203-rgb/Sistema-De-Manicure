@@ -70,7 +70,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
 
                         .requestMatchers("/auth/login").permitAll()
-
+                        .requestMatchers("/uploads/**").permitAll()
                         .anyRequest().authenticated()
                 )
 

@@ -10,14 +10,18 @@ import Agenda from './pages/Agenda'
 import Financeiro from './pages/Financeiro'
 import Perfil from './pages/Perfil'
 
+
 function App() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
   const [logado, setLogado] = useState(false)
   const [pagina, setPagina] = useState('dashboard')
+  const [erroLogin, setErroLogin] = useState('')
 
   async function handleLogin(event) {
     event.preventDefault()
+    setErroLogin('')
+
 
     try {
       const resposta = await fetch('http://192.168.1.5:8080/auth/login', {
@@ -32,7 +36,8 @@ function App() {
       })
 
       if (!resposta.ok) {
-        throw new Error('E-mail ou senha inválidos')
+        setErroLogin('E-mail ou senha inválidos.')
+        return
       }
 
       const token = await resposta.text()
@@ -44,9 +49,9 @@ function App() {
       console.log('Token:', token)
 
     } catch (erro) {
-      console.error(erro.message)
-    }
+      setErroLogin('Não foi possível realizar o login.')
   }
+}
 
   function renderizarPagina() {
     if (pagina === 'clientes') {
@@ -116,6 +121,11 @@ function App() {
           <button type="submit">
             Entrar
           </button>
+          {erroLogin && (
+            <p className="erro-login">
+              {erroLogin}
+            </p>
+          )}
 
         </form>
 
@@ -123,6 +133,7 @@ function App() {
     </main>
   )
 }
+
 
 export default App
 

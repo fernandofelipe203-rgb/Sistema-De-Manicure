@@ -6,8 +6,16 @@ import com.ProjetoManicure.Manicure.model.Profissional;
 import com.ProjetoManicure.Manicure.repository.ProfissionalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import com.ProjetoManicure.Manicure.dto.AtualizarPerfilRequest;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProfissionalService {
@@ -73,6 +81,42 @@ public class ProfissionalService {
         return profissionalRepository.save(profissional);
     }
 
+    public Profissional atualizarMeuPerfil(
+            int id,
+            AtualizarPerfilRequest dados) {
+
+        Profissional profissional =
+                profissionalRepository.findById(id).orElse(null);
+
+        if (profissional == null) {
+            return null;
+        }
+
+        if (!passwordEncoder.matches(
+                dados.getSenhaAtual(),
+                profissional.getSenha())) {
+
+            throw new IllegalArgumentException(
+                    "Senha atual incorreta."
+            );
+        }
+
+        if (profissionalRepository.existsByEmailAndIdNot(
+                dados.getEmail(),
+                id)) {
+
+            throw new ProfissionalDuplicadoException(
+                    "Já existe uma profissional cadastrada com este e-mail."
+            );
+        }
+
+        profissional.setNome(dados.getNome());
+        profissional.setEmail(dados.getEmail());
+        profissional.setTelefone(dados.getTelefone());
+        profissional.setPerfil(dados.getPerfil());
+
+        return profissionalRepository.save(profissional);
+    }
     public boolean excluir(int id) {
 
         if (!profissionalRepository.existsById(id)) {
@@ -107,5 +151,33 @@ public class ProfissionalService {
         profissionalRepository.save(profissional);
 
         return true;
+    }
+    public Profissional salvarFoto(int id, MultipartFile arquivo) throws IOException {
+
+        Profissional profissional =
+                profissionalRepository.findById(id).orElse(null);
+
+        if (profissional == null) {
+            return null;
+        }
+
+        String nomeArquivo =
+                UUID.randomUUID() + "_" + arquivo.getOriginalFilename();
+
+        Path pasta = Paths.get("uploads/perfis");
+
+        Files.createDirectories(pasta);
+
+        Path caminho = pasta.resolve(nomeArquivo);
+
+        Files.copy(
+                arquivo.getInputStream(),
+                caminho,
+                StandardCopyOption.REPLACE_EXISTING
+        );
+
+        profissional.setFoto("/uploads/perfis/" + nomeArquivo);
+
+        return profissionalRepository.save(profissional);
     }
 }

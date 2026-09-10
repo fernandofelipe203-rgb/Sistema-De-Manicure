@@ -1,6 +1,7 @@
 package com.ProjetoManicure.Manicure.Controller;
 
 import com.ProjetoManicure.Manicure.dto.AlterarSenhaRequest;
+import com.ProjetoManicure.Manicure.dto.AtualizarPerfilRequest;
 import com.ProjetoManicure.Manicure.model.Profissional;
 import com.ProjetoManicure.Manicure.service.JwtService;
 import com.ProjetoManicure.Manicure.service.ProfissionalService;
@@ -9,7 +10,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -46,6 +49,56 @@ public class ProfissionalController {
 
         return ResponseEntity.ok(profissional);
     }
+    @PutMapping("/me")
+    public ResponseEntity<Profissional> atualizarMeuPerfil(
+            @RequestHeader("Authorization") String token,
+            @Valid @RequestBody AtualizarPerfilRequest dados) {
+
+        token = token.replace("Bearer ", "");
+
+        Claims claims = jwtService.validarToken(token);
+
+        int profissionalId = claims.get("id", Integer.class);
+
+        Profissional profissionalAtualizado =
+                profissionalService.atualizarMeuPerfil(profissionalId, dados);
+
+        if (profissionalAtualizado == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(profissionalAtualizado);
+    }
+    @PostMapping("/me/foto")
+    public ResponseEntity<?> enviarFoto(
+            @RequestHeader("Authorization") String token,
+            @RequestParam("foto") MultipartFile foto) {
+
+        token = token.replace("Bearer ", "");
+
+        Claims claims = jwtService.validarToken(token);
+
+        int profissionalId = claims.get("id", Integer.class);
+
+        try {
+
+            Profissional profissional =
+                    profissionalService.salvarFoto(profissionalId, foto);
+
+            if (profissional == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            return ResponseEntity.ok(profissional);
+
+        } catch (IOException e) {
+
+            return ResponseEntity
+                    .internalServerError()
+                    .body("Erro ao salvar a foto.");
+        }
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Profissional> buscarPorId(@PathVariable int id) {

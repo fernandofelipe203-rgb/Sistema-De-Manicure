@@ -1,13 +1,27 @@
 import { useEffect, useState } from 'react'
-import { buscarMeuPerfil } from '../services/api'
+import {
+  buscarMeuPerfil,
+  enviarFotoPerfil,
+  atualizarMeuPerfil
+} from '../services/api'
 
 function Perfil() {
 
   const [perfil, setPerfil] = useState(null)
+  const [editando, setEditando] = useState(false)
+  const [dadosEdicao, setDadosEdicao] = useState({
+    nome: '',
+    email: '',
+    telefone: '',
+    perfil: ''
+  })
   const [carregando, setCarregando] = useState(true)
   const [senhaAtual, setSenhaAtual] = useState('')
+  const [mensagemPerfil, setMensagemPerfil] = useState('')
   const [novaSenha, setNovaSenha] = useState('')
   const [confirmarSenha, setConfirmarSenha] = useState('')
+
+  const [senhaAtualPerfil, setSenhaAtualPerfil] = useState('')
   const [mensagemSenha, setMensagemSenha] = useState('')
   const [erroSenha, setErroSenha] = useState('')
   const [alterandoSenha, setAlterandoSenha] = useState(false)
@@ -98,7 +112,56 @@ async function handleAlterarSenha(event) {
       </div>
     )
   }
+function iniciarEdicao() {
+  setDadosEdicao({
+    nome: perfil.nome,
+    email: perfil.email,
+    telefone: perfil.telefone,
+    perfil: perfil.perfil
+  })
 
+  setEditando(true)
+}
+async function salvarPerfil() {
+
+  try {
+
+    const dados = await atualizarMeuPerfil({
+      ...dadosEdicao,
+      senhaAtual: senhaAtualPerfil
+    })
+
+    setPerfil(dados)
+    setEditando(false)
+    setMensagemPerfil('Dados atualizados com sucesso!')
+    setSenhaAtualPerfil('')
+
+  } catch (erro) {
+    console.error(erro)
+    setMensagemPerfil(erro.message || 'Não foi possível atualizar os dados.')
+  }
+}
+async function handleAlterarFoto(event) {
+
+  const arquivo = event.target.files[0]
+
+  if (!arquivo) {
+    return
+  }
+
+  try {
+
+    const dados = await enviarFotoPerfil(arquivo)
+
+    setPerfil(dados)
+
+  } catch (erro) {
+
+    console.error(erro)
+
+    alert('Não foi possível alterar a foto.')
+  }
+}
   return (
     <div className="pagina">
 
@@ -111,38 +174,177 @@ async function handleAlterarSenha(event) {
 
       <div className="card-perfil">
 
-        <div className="perfil-avatar">
-          {perfil.nome.charAt(0).toUpperCase()}
+        <div className="avatar-container">
+
+          <div className="perfil-avatar">
+            {perfil.foto ? (
+              <img
+                src={`http://192.168.1.5:8080${perfil.foto}`}
+                alt={`Foto de ${perfil.nome}`}
+              />
+            ) : (
+              perfil.nome.charAt(0).toUpperCase()
+            )}
+          </div>
+
+          <label className="botao-foto">
+            +
+            <input
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handleAlterarFoto}
+            />
+          </label>
+
         </div>
+
 
         <h2>{perfil.nome}</h2>
         <span>{perfil.perfil}</span>
+
+        {!editando && (
+          <div className="botao-editar-container">
+            <button
+              className="botao-editar-perfil"
+              onClick={iniciarEdicao}
+            >
+              Editar dados
+            </button>
+          </div>
+        )}
 
         <div className="perfil-informacoes">
 
           <div>
             <label>Nome</label>
-            <p>{perfil.nome}</p>
+
+            {editando ? (
+              <input
+                type="text"
+                value={dadosEdicao.nome}
+                onChange={(e) =>
+                  setDadosEdicao({
+                    ...dadosEdicao,
+                    nome: e.target.value
+                  })
+                }
+              />
+            ) : (
+              <p>{perfil.nome}</p>
+            )}
           </div>
 
           <div>
             <label>E-mail</label>
-            <p>{perfil.email}</p>
+
+            {editando ? (
+              <input
+                type="email"
+                value={dadosEdicao.email}
+                onChange={(e) =>
+                  setDadosEdicao({
+                    ...dadosEdicao,
+                    email: e.target.value
+                  })
+                }
+              />
+            ) : (
+              <p>{perfil.email}</p>
+            )}
           </div>
 
           <div>
             <label>Telefone</label>
-            <p>{perfil.telefone}</p>
+
+            {editando ? (
+              <input
+                type="text"
+                value={dadosEdicao.telefone}
+                onChange={(e) =>
+                  setDadosEdicao({
+                    ...dadosEdicao,
+                    telefone: e.target.value
+                  })
+                }
+              />
+            ) : (
+              <p>{perfil.telefone}</p>
+            )}
           </div>
 
           <div>
             <label>Perfil</label>
-            <p>{perfil.perfil}</p>
+
+            {editando ? (
+              <select
+                value={dadosEdicao.perfil}
+                onChange={(e) =>
+                  setDadosEdicao({
+                    ...dadosEdicao,
+                    perfil: e.target.value
+                  })
+                }
+              >
+                <option value="PROFISSIONAL">Profissional</option>
+                <option value="ADMIN">Administrador</option>
+              </select>
+            ) : (
+              <p>{perfil.perfil}</p>
+            )}
           </div>
 
         </div>
 
-      </div>
+        {mensagemPerfil && (
+          <div
+            className={
+              mensagemPerfil === 'Dados atualizados com sucesso!'
+                ? 'mensagem-sucesso-perfil'
+                : 'mensagem-erro-perfil'
+            }
+          >
+            {mensagemPerfil}
+          </div>
+        )}
+
+        {editando && (
+          <div className="acoes-perfil">
+
+            <div className="campo-senha-perfil">
+              <label>Senha atual</label>
+
+              <input
+                type="password"
+                value={senhaAtualPerfil}
+                onChange={(e) => setSenhaAtualPerfil(e.target.value)}
+                placeholder="Digite sua senha atual"
+              />
+            </div>
+
+            <button
+              className="botao-salvar-perfil"
+              onClick={salvarPerfil}
+            >
+              Salvar alterações
+            </button>
+
+            <button
+              className="botao-cancelar-perfil"
+              onClick={() => {
+                setEditando(false)
+                setSenhaAtualPerfil('')
+                setMensagemPerfil('')
+              }}
+            >
+              Cancelar
+            </button>
+
+          </div>
+        )}
+
+        </div>
+
     <div className="card-seguranca">
 
       <div className="seguranca-cabecalho">

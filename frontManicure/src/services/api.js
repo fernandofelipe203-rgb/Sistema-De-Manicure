@@ -393,3 +393,52 @@ export async function buscarMeuPerfil() {
 
   return await resposta.json()
 }
+export async function enviarFotoPerfil(arquivo) {
+
+  const token = localStorage.getItem('token')
+
+  const formData = new FormData()
+
+  formData.append('foto', arquivo)
+
+  const resposta = await fetch(
+    `${API_URL}/profissionais/me/foto`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      },
+      body: formData
+    }
+  )
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao enviar foto')
+  }
+
+  return await resposta.json()
+}
+export async function atualizarMeuPerfil(dados) {
+
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(
+    `${API_URL}/profissionais/me`,
+    {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dados)
+    }
+  )
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(mensagem || 'Erro ao atualizar perfil')
+  }
+
+  return await resposta.json()
+}

@@ -188,12 +188,75 @@ button {
   width: 45px;
   height: 45px;
   border-radius: 50%;
+  overflow: hidden;
   background: #f9dce6;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #c63f70;
   font-size: 20px;
+}
+
+.perfil img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.perfil-avatar {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e91e63, #f06292);
+  color: white;
+  font-size: 36px;
+  font-weight: bold;
+  box-shadow: 0 8px 20px rgba(233, 30, 99, 0.25);
+}
+
+.perfil-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+.botao-foto {
+  width: 32px;
+  height: 32px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: #e91e63;
+  color: white;
+
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1;
+
+  border: 3px solid white;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 10px rgba(233, 30, 99, 0.30);
+
+  transition: 0.2s;
+}
+
+.botao-foto:hover {
+  transform: scale(1.08);
+  background: #d81b60;
 }
 
 
@@ -2111,11 +2174,16 @@ width: 100%;
 }
 
 /* Avatar */
-
-.perfil-avatar {
+.avatar-container {
+  position: relative;
   width: 90px;
   height: 90px;
   margin: 0 auto 15px;
+}
+.perfil-avatar {
+  width: 90px;
+  height: 90px;
+
 
   display: flex;
   align-items: center;
@@ -2386,4 +2454,138 @@ width: 100%;
 
 .botao-olho:hover {
   transform: translateY(-50%) scale(1.08);
+}
+/* =========================
+   ERRO DE LOGIN
+   ========================= */
+
+.erro-login {
+  margin: 14px 0 0;
+  padding: 11px 14px;
+  border-radius: 10px;
+  background: #fff0f3;
+  border: 1px solid #f6cbd7;
+  color: #c2185b;
+  font-size: 14px;
+  text-align: center;
+  font-weight: 500;
+}
+.mensagem-sucesso-perfil {
+  margin: 0 auto 20px;
+  padding: 12px 16px;
+  max-width: 500px;
+  border-radius: 10px;
+  background: #fce4ec;
+  color: #c2185b;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+.mensagem-erro-perfil {
+  margin: 0 auto 20px;
+  padding: 12px 16px;
+  max-width: 500px;
+  border-radius: 10px;
+  background: #ffebee;
+  color: #c62828;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+/* =========================
+   EDIÇÃO DO PERFIL
+   ========================= */
+
+.perfil-informacoes input,
+.perfil-informacoes select,
+.campo-senha-perfil input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #f3c2d3;
+  border-radius: 10px;
+  background: #fffafa;
+  color: #514648;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+.perfil-informacoes input:focus,
+.perfil-informacoes select:focus,
+.campo-senha-perfil input:focus {
+  border-color: #e91e63;
+  box-shadow: 0 0 0 3px rgba(233, 30, 99, 0.10);
+  background: white;
+}
+
+.perfil-informacoes label,
+.campo-senha-perfil label {
+  display: block;
+  margin-bottom: 7px;
+  color: #6b555c;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.campo-senha-perfil {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.acoes-perfil {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.botao-salvar-perfil,
+.botao-cancelar-perfil,
+.botao-editar-perfil {
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.botao-salvar-perfil {
+  background: #e91e63;
+  color: white;
+}
+
+.botao-salvar-perfil:hover {
+  background: #d81b60;
+  transform: translateY(-1px);
+}
+
+.botao-cancelar-perfil {
+  background: #f8e8ee;
+  color: #b01f55;
+}
+
+.botao-cancelar-perfil:hover {
+  background: #f5d8e2;
+}
+
+.botao-editar-perfil {
+  background: #e91e63;
+  color: white;
+  width: 100%;
+}
+
+.botao-editar-perfil:hover {
+  background: #d81b60;
+  transform: translateY(-1px);
+}
+.botao-editar-container {
+  width: 100%;
+  max-width: 220px;
+  margin: 18px auto 25px;
+}
+
+.botao-editar-container .botao-editar-perfil {
+  width: 100%;
 }

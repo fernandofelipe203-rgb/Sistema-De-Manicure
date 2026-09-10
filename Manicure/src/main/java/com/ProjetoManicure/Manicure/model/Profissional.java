@@ -35,6 +35,8 @@ public class Profissional {
     @NotBlank(message = "Perfil é obrigatório")
     private String perfil;
 
+    private String foto;
+
     public int getId() {
         return id;
     }
@@ -81,5 +83,13 @@ public class Profissional {
 
     public void setPerfil(String perfil) {
         this.perfil = perfil;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 }
