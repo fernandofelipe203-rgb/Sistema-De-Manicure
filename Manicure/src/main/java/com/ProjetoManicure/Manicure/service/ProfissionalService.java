@@ -1,6 +1,10 @@
 package com.ProjetoManicure.Manicure.service;
 
+import com.ProjetoManicure.Manicure.dto.ProfissionalPublicoDTO;
+import com.ProjetoManicure.Manicure.dto.ServicoPublicoDTO;
 import com.ProjetoManicure.Manicure.exception.ProfissionalDuplicadoException;
+import com.ProjetoManicure.Manicure.model.Servico;
+import com.ProjetoManicure.Manicure.repository.ServicoRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.ProjetoManicure.Manicure.model.Profissional;
 import com.ProjetoManicure.Manicure.repository.ProfissionalRepository;
@@ -8,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.ProjetoManicure.Manicure.dto.AtualizarPerfilRequest;
+
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,6 +27,8 @@ public class ProfissionalService {
 
     @Autowired
     private ProfissionalRepository profissionalRepository;
+    @Autowired
+    private ServicoRepository servicoRepository;
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 
@@ -206,5 +213,28 @@ public class ProfissionalService {
         profissional.setFoto("/uploads/perfis/" + nomeArquivo);
 
         return profissionalRepository.save(profissional);
+    }
+    public ProfissionalPublicoDTO buscarDadosPublicos(int id) {
+
+        Profissional profissional =
+                profissionalRepository.findById(id).orElse(null);
+
+        if (profissional == null) {
+            return null;
+        }
+        List<Servico> servicos =
+                servicoRepository.findByProfissionalId(id);
+        return new ProfissionalPublicoDTO(
+                profissional.getNome(),
+                profissional.getTelefone(),
+                servicos.stream()
+                        .map(servico -> new ServicoPublicoDTO(
+                                servico.getId(),
+                                servico.getNome(),
+                                servico.getPreco(),
+                                servico.getDuracao()
+                        ))
+                        .toList()
+        );
     }
 }

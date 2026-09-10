@@ -9,6 +9,7 @@ import Servicos from './pages/Servicos'
 import Agenda from './pages/Agenda'
 import Financeiro from './pages/Financeiro'
 import Perfil from './pages/Perfil'
+import Publico from './pages/Publico'
 
 
 function App() {
@@ -17,6 +18,12 @@ function App() {
   const [logado, setLogado] = useState(false)
   const [pagina, setPagina] = useState('dashboard')
   const [erroLogin, setErroLogin] = useState('')
+
+  const caminho = window.location.pathname
+
+  if (caminho.startsWith('/publico/')) {
+    return <Publico />
+  }
 
   async function handleLogin(event) {
     event.preventDefault()

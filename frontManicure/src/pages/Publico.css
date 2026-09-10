@@ -1,0 +1,194 @@
+
+* {
+  box-sizing: border-box;
+}
+
+.publico-container {
+  min-height: 100vh;
+  padding: 40px 20px 60px;
+  background: linear-gradient(135deg, #fff5f8, #ffe8ef);
+  font-family: Arial, sans-serif;
+  color: #4d3940;
+}
+
+/* =========================
+   CABEÇALHO
+   ========================= */
+
+.publico-header {
+  max-width: 850px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.publico-detalhe {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 28px;
+  color: #d94f78;
+}
+
+.publico-header h1 {
+  margin: 0;
+  font-size: 34px;
+  color: #8f3154;
+}
+
+.publico-header p {
+  margin-top: 10px;
+  color: #9a707e;
+  font-size: 16px;
+}
+
+/* =========================
+   SERVIÇOS
+   ========================= */
+
+.publico-servicos {
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.publico-servicos h2 {
+  margin-bottom: 20px;
+  color: #8f3154;
+  font-size: 24px;
+}
+
+.servicos-grid {
+  display: grid;
+  gap: 16px;
+}
+
+/* =========================
+   CARD
+   ========================= */
+
+.servico-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #f3d5df;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(170, 80, 110, 0.08);
+}
+
+.servico-icone {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #f9d5e1;
+  color: #c43f68;
+  font-size: 20px;
+}
+
+.servico-info {
+  flex: 1;
+}
+
+.servico-info h3 {
+  margin: 0 0 7px;
+  font-size: 17px;
+  color: #563d45;
+}
+
+.servico-duracao {
+  margin: 0 0 8px;
+  color: #9a7a84;
+  font-size: 13px;
+}
+
+.servico-info strong {
+  font-size: 18px;
+  color: #c43f68;
+}
+
+/* =========================
+   BOTÃO
+   ========================= */
+
+.servico-card button {
+  border: none;
+  padding: 11px 17px;
+  border-radius: 12px;
+  background: #d94f78;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.servico-card button:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+/* =========================
+   CARREGANDO / ERRO
+   ========================= */
+
+.publico-carregando,
+.publico-erro {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff5f8;
+  color: #8f3154;
+}
+
+/* =========================
+   CELULAR
+   ========================= */
+
+@media (max-width: 600px) {
+
+  .publico-container {
+    padding: 30px 15px 40px;
+  }
+
+  .publico-header {
+    margin-bottom: 30px;
+  }
+
+  .publico-header h1 {
+    font-size: 27px;
+  }
+
+  .publico-servicos h2 {
+    font-size: 21px;
+  }
+
+  .servico-card {
+    align-items: flex-start;
+    padding: 17px;
+    gap: 12px;
+  }
+
+  .servico-icone {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+  }
+
+  .servico-info h3 {
+    font-size: 15px;
+  }
+
+  .servico-info strong {
+    font-size: 17px;
+  }
+
+  .servico-card button {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+}
+

@@ -569,3 +569,19 @@ export async function atualizarMeuPerfil(dados) {
 
   return await resposta.json()
 }
+// =========================
+// PÁGINA PÚBLICA
+// =========================
+
+export async function buscarDadosPublicos(profissionalId) {
+
+  const resposta = await fetch(
+    `${API_URL}/publico/profissional/${profissionalId}/servicos`
+  )
+
+  if (!resposta.ok) {
+    throw new Error('Profissional não encontrada')
+  }
+
+  return await resposta.json()
+}
