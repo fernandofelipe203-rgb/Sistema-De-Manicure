@@ -371,6 +371,133 @@ export async function buscarReceitasPorPeriodo(inicio, fim) {
 
   return await resposta.json()
 }
+export async function buscarResumoFinanceiroPorPeriodo(inicio, fim) {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(
+    `${API_URL}/financeiro/resumo-periodo?dataInicio=${inicio}&dataFim=${fim}`,
+    {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  )
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(
+      mensagem || 'Erro ao buscar resumo financeiro'
+    )
+  }
+
+  return await resposta.json()
+}
+export async function buscarDespesasPorPeriodo(inicio, fim) {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(
+    `${API_URL}/despesas/periodo?dataInicio=${inicio}&dataFim=${fim}`,
+    {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    }
+  )
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(
+      mensagem || 'Erro ao buscar despesas por período'
+    )
+  }
+
+  return await resposta.json()
+}
+export async function buscarDespesas() {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/despesas`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(
+      mensagem || 'Erro ao buscar despesas'
+    )
+  }
+
+  return await resposta.json()
+}
+export async function excluirDespesa(id) {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/despesas/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(
+      mensagem || 'Erro ao excluir despesa'
+    )
+  }
+}
+export async function atualizarDespesa(id, despesa) {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/despesas/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(despesa)
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+    throw new Error(
+      mensagem || 'Erro ao atualizar despesa'
+    )
+  }
+
+  return await resposta.json()
+}
+export async function cadastrarDespesa(despesa) {
+  const token = localStorage.getItem('token')
+
+  const resposta = await fetch(`${API_URL}/despesas`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(despesa)
+  })
+
+  if (!resposta.ok) {
+    const mensagem = await resposta.text()
+
+    throw new Error(
+      mensagem || 'Erro ao cadastrar despesa'
+    )
+  }
+
+  return await resposta.json()
+}
 // =========================
 // PROFISSIONAL LOGADO
 // =========================

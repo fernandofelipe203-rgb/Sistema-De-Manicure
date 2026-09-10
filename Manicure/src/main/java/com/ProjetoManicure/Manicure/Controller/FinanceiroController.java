@@ -1,9 +1,12 @@
 package com.ProjetoManicure.Manicure.Controller;
 
+import com.ProjetoManicure.Manicure.dto.ResumoFinanceiroDTO;
 import com.ProjetoManicure.Manicure.model.Agendamento;
 import com.ProjetoManicure.Manicure.service.FinanceiroService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -140,5 +143,25 @@ public class FinanceiroController {
                         inicio,
                         fim
                 );
+    }
+    @GetMapping("/resumo-periodo")
+    public ResponseEntity<ResumoFinanceiroDTO> resumoPorPeriodo(
+            @RequestHeader("Authorization") String token,
+
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate dataInicio,
+
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate dataFim) {
+
+        return ResponseEntity.ok(
+                financeiroService.resumoPorPeriodo(
+                        token,
+                        dataInicio,
+                        dataFim
+                )
+        );
     }
 }

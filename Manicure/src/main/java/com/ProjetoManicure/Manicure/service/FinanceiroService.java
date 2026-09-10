@@ -1,7 +1,12 @@
 package com.ProjetoManicure.Manicure.service;
 
+import com.ProjetoManicure.Manicure.dto.ResumoFinanceiroDTO;
 import com.ProjetoManicure.Manicure.model.Agendamento;
+import com.ProjetoManicure.Manicure.model.Despesa;
+import com.ProjetoManicure.Manicure.repository.AgendamentoRepository;
+import com.ProjetoManicure.Manicure.repository.DespesaRepository;
 import com.ProjetoManicure.Manicure.repository.FinanceiroRepository;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +21,15 @@ public class FinanceiroService {
 
     @Autowired
     private FinanceiroRepository financeiroRepository;
+
+    @Autowired
+    private DespesaRepository despesaRepository;
+
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
 
     // =========================
     // TODAS AS RECEITAS
@@ -158,5 +172,47 @@ public class FinanceiroService {
                                 : 0.0
                 )
                 .sum();
+    }
+    public ResumoFinanceiroDTO resumoPorPeriodo(
+            String token,
+            LocalDate dataInicio,
+            LocalDate dataFim) {
+
+        token = token.replace("Bearer ", "");
+
+        Claims claims = jwtService.validarToken(token);
+
+        int profissionalId =
+                claims.get("id", Integer.class);
+
+        List<Agendamento> agendamentos =
+                agendamentoRepository
+                        .findByProfissional_IdAndDataHoraBetween(
+                                profissionalId,
+                                dataInicio.atStartOfDay(),
+                                dataFim.atTime(23, 59, 59)
+                        );
+
+        Double recebimentos = agendamentos.stream()
+                .filter(a -> "CONCLUIDO".equals(a.getStatus()))
+                .mapToDouble(Agendamento::getValor)
+                .sum();
+
+        List<Despesa> despesas =
+                despesaRepository
+                        .findByProfissional_IdAndDataBetween(
+                                profissionalId,
+                                dataInicio,
+                                dataFim
+                        );
+
+        Double totalDespesas = despesas.stream()
+                .mapToDouble(Despesa::getValor)
+                .sum();
+
+        return new ResumoFinanceiroDTO(
+                recebimentos,
+                totalDespesas
+        );
     }
 }
