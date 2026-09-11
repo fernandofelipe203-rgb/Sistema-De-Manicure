@@ -37,6 +37,8 @@ public class Profissional {
 
     private String foto;
 
+    private String linkPublico;
+
     public int getId() {
         return id;
     }
@@ -91,5 +93,13 @@ public class Profissional {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    public String getLinkPublico() {
+        return linkPublico;
+    }
+
+    public void setLinkPublico(String linkPublico) {
+        this.linkPublico = linkPublico;
     }
 }

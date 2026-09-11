@@ -27,4 +27,17 @@ public class PublicoController {
 
         return ResponseEntity.ok(dados);
     }
+    @GetMapping("/profissional/link/{linkPublico}")
+    public ResponseEntity<ProfissionalPublicoDTO> buscarServicosPorLink(
+            @PathVariable String linkPublico) {
+
+        ProfissionalPublicoDTO dados =
+                profissionalService.buscarDadosPublicosPorLink(linkPublico);
+
+        if (dados == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(dados);
+    }
 }

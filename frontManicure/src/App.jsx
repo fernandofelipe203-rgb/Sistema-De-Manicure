@@ -21,9 +21,12 @@ function App() {
 
   const caminho = window.location.pathname
 
-  if (caminho.startsWith('/publico/')) {
-    return <Publico />
-  }
+ if (
+   caminho.startsWith('/publico/') ||
+   caminho.startsWith('/profissional/')
+ ) {
+   return <Publico />
+ }
 
   async function handleLogin(event) {
     event.preventDefault()

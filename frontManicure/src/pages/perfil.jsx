@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react'
 import {
   buscarMeuPerfil,
@@ -31,70 +32,75 @@ function Perfil() {
     carregarPerfil()
   }, [])
 
-  async function carregarPerfil() {
-    try {
-      const dados = await buscarMeuPerfil()
-      setPerfil(dados)
-    } catch (erro) {
-      console.error(erro)
-    } finally {
-      setCarregando(false)
-    }
-  }
-async function handleAlterarSenha(event) {
-  event.preventDefault()
-
-  setMensagemSenha('')
-  setErroSenha('')
-
-  if (novaSenha !== confirmarSenha) {
-    setErroSenha('A nova senha e a confirmação não são iguais.')
-    return
-  }
-
-  if (novaSenha.length < 6) {
-    setErroSenha('A nova senha deve ter pelo menos 6 caracteres.')
-    return
-  }
-
+async function carregarPerfil() {
   try {
-    setAlterandoSenha(true)
+    const dados = await buscarMeuPerfil()
 
-    const token = localStorage.getItem('token')
+    console.log('DADOS DO PERFIL:', dados)
 
-    const resposta = await fetch(
-      'http://192.168.1.5:8080/profissionais/me/senha',
-      {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          senhaAtual,
-          novaSenha
-        })
-      }
-    )
-
-    const mensagem = await resposta.text()
-
-    if (!resposta.ok) {
-      throw new Error(mensagem || 'Erro ao alterar senha')
-    }
-
-    setMensagemSenha('Senha alterada com sucesso!')
-
-    setSenhaAtual('')
-    setNovaSenha('')
-    setConfirmarSenha('')
-
+    setPerfil(dados)
   } catch (erro) {
-    setErroSenha(erro.message)
+    console.error(erro)
   } finally {
-    setAlterandoSenha(false)
+    setCarregando(false)
   }
 }
+
+  async function handleAlterarSenha(event) {
+    event.preventDefault()
+
+    setMensagemSenha('')
+    setErroSenha('')
+
+    if (novaSenha !== confirmarSenha) {
+      setErroSenha('A nova senha e a confirmação não são iguais.')
+      return
+    }
+
+    if (novaSenha.length < 6) {
+      setErroSenha('A nova senha deve ter pelo menos 6 caracteres.')
+      return
+    }
+
+    try {
+      setAlterandoSenha(true)
+
+      const token = localStorage.getItem('token')
+
+      const resposta = await fetch(
+        'http://192.168.1.5:8080/profissionais/me/senha',
+        {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            senhaAtual,
+            novaSenha
+          })
+        }
+      )
+
+      const mensagem = await resposta.text()
+
+      if (!resposta.ok) {
+        throw new Error(mensagem || 'Erro ao alterar senha')
+      }
+
+      setMensagemSenha('Senha alterada com sucesso!')
+
+      setSenhaAtual('')
+      setNovaSenha('')
+      setConfirmarSenha('')
+
+    } catch (erro) {
+      setErroSenha(erro.message)
+    } finally {
+      setAlterandoSenha(false)
+    }
+  }
+
   if (carregando) {
     return (
       <div className="pagina">
@@ -112,56 +118,76 @@ async function handleAlterarSenha(event) {
       </div>
     )
   }
-function iniciarEdicao() {
-  setDadosEdicao({
-    nome: perfil.nome,
-    email: perfil.email,
-    telefone: perfil.telefone,
-    perfil: perfil.perfil
-  })
 
-  setEditando(true)
-}
-async function salvarPerfil() {
-
-  try {
-
-    const dados = await atualizarMeuPerfil({
-      ...dadosEdicao,
-      senhaAtual: senhaAtualPerfil
+  function iniciarEdicao() {
+    setDadosEdicao({
+      nome: perfil.nome,
+      email: perfil.email,
+      telefone: perfil.telefone,
+      perfil: perfil.perfil
     })
 
-    setPerfil(dados)
-    setEditando(false)
-    setMensagemPerfil('Dados atualizados com sucesso!')
-    setSenhaAtualPerfil('')
-
-  } catch (erro) {
-    console.error(erro)
-    setMensagemPerfil(erro.message || 'Não foi possível atualizar os dados.')
-  }
-}
-async function handleAlterarFoto(event) {
-
-  const arquivo = event.target.files[0]
-
-  if (!arquivo) {
-    return
+    setEditando(true)
   }
 
-  try {
+  async function salvarPerfil() {
 
-    const dados = await enviarFotoPerfil(arquivo)
+    try {
 
-    setPerfil(dados)
+      const dados = await atualizarMeuPerfil({
+        ...dadosEdicao,
+        senhaAtual: senhaAtualPerfil
+      })
 
-  } catch (erro) {
+      setPerfil(dados)
+      setEditando(false)
+      setMensagemPerfil('Dados atualizados com sucesso!')
+      setSenhaAtualPerfil('')
 
-    console.error(erro)
-
-    alert(erro.message || 'Não foi possível alterar a foto.')
+    } catch (erro) {
+      console.error(erro)
+      setMensagemPerfil(
+        erro.message || 'Não foi possível atualizar os dados.'
+      )
+    }
   }
-}
+
+  async function handleAlterarFoto(event) {
+
+    const arquivo = event.target.files[0]
+
+    if (!arquivo) {
+      return
+    }
+
+    try {
+
+      const dados = await enviarFotoPerfil(arquivo)
+
+      setPerfil(dados)
+
+    } catch (erro) {
+
+      console.error(erro)
+
+      alert(erro.message || 'Não foi possível alterar a foto.')
+    }
+  }
+
+ async function copiarLinkPublico() {
+   const link = `${window.location.origin}/profissional/${perfil.linkPublico}`
+
+   try {
+     await navigator.clipboard.writeText(link)
+   } catch (erro) {
+     console.error(erro)
+   }
+
+   setMensagemPerfil('Link público copiado!')
+ }
+
+ const linkPublico = `${window.location.origin}/profissional/${perfil.linkPublico}`
+
   return (
     <div className="pagina">
 
@@ -199,9 +225,40 @@ async function handleAlterarFoto(event) {
 
         </div>
 
-
         <h2>{perfil.nome}</h2>
         <span>{perfil.perfil}</span>
+
+        <div className="link-publico">
+
+          <label>Meu link público</label>
+
+          <div className="link-publico-conteudo">
+
+            <input
+              type="text"
+              value={linkPublico}
+              readOnly
+            />
+
+            <button
+              type="button"
+              onClick={copiarLinkPublico}
+            >
+              Copiar link
+            </button>
+
+          </div>
+          {mensagemPerfil && (
+            <div className="mensagem-link">
+              {mensagemPerfil}
+            </div>
+          )}
+
+          <small>
+            Compartilhe este link para seus clientes conhecerem seu trabalho.
+          </small>
+
+        </div>
 
         {!editando && (
           <div className="botao-editar-container">
@@ -343,108 +400,110 @@ async function handleAlterarFoto(event) {
           </div>
         )}
 
-        </div>
-
-    <div className="card-seguranca">
-
-      <div className="seguranca-cabecalho">
-        <h2>Segurança da conta</h2>
-        <p>Altere sua senha para manter sua conta protegida.</p>
       </div>
 
-      <form onSubmit={handleAlterarSenha}>
+      <div className="card-seguranca">
 
-       <div className="campo-senha">
-         <label>Senha atual</label>
-
-         <div className="campo-senha-wrapper">
-           <input
-             type={mostrarSenha ? 'text' : 'password'}
-             value={senhaAtual}
-             onChange={(e) => setSenhaAtual(e.target.value)}
-             placeholder="Digite sua senha atual"
-             required
-           />
-
-           <button
-             type="button"
-             className="botao-olho"
-             onClick={() => setMostrarSenha(!mostrarSenha)}
-           >
-             {mostrarSenha ? '🙈' : '👁️'}
-           </button>
-         </div>
-       </div>
-
-        <div className="campo-senha">
-          <label>Nova senha</label>
-
-          <div className="campo-senha-wrapper">
-            <input
-              type={mostrarSenha ? 'text' : 'password'}
-              value={novaSenha}
-              onChange={(e) => setNovaSenha(e.target.value)}
-              placeholder="Digite sua nova senha"
-              required
-            />
-
-            <button
-              type="button"
-              className="botao-olho"
-              onClick={() => setMostrarSenha(!mostrarSenha)}
-            >
-              {mostrarSenha ? '🙈' : '👁️'}
-            </button>
-          </div>
+        <div className="seguranca-cabecalho">
+          <h2>Segurança da conta</h2>
+          <p>Altere sua senha para manter sua conta protegida.</p>
         </div>
 
-        <div className="campo-senha">
-          <label>Confirmar nova senha</label>
+        <form onSubmit={handleAlterarSenha}>
 
-          <div className="campo-senha-wrapper">
-            <input
-              type={mostrarSenha ? 'text' : 'password'}
-              value={confirmarSenha}
-              onChange={(e) => setConfirmarSenha(e.target.value)}
-              placeholder="Digite novamente sua nova senha"
-              required
-            />
+          <div className="campo-senha">
+            <label>Senha atual</label>
 
-            <button
-              type="button"
-              className="botao-olho"
-              onClick={() => setMostrarSenha(!mostrarSenha)}
-            >
-              {mostrarSenha ? '🙈' : '👁️'}
-            </button>
+            <div className="campo-senha-wrapper">
+              <input
+                type={mostrarSenha ? 'text' : 'password'}
+                value={senhaAtual}
+                onChange={(e) => setSenhaAtual(e.target.value)}
+                placeholder="Digite sua senha atual"
+                required
+              />
+
+              <button
+                type="button"
+                className="botao-olho"
+                onClick={() => setMostrarSenha(!mostrarSenha)}
+              >
+                {mostrarSenha ? '🙈' : '👁️'}
+              </button>
+            </div>
           </div>
-        </div>
 
-        {mensagemSenha && (
-          <p className="mensagem-sucesso">
-            {mensagemSenha}
-          </p>
-        )}
+          <div className="campo-senha">
+            <label>Nova senha</label>
 
-        {erroSenha && (
-          <p className="mensagem-erro">
-            {erroSenha}
-          </p>
-        )}
+            <div className="campo-senha-wrapper">
+              <input
+                type={mostrarSenha ? 'text' : 'password'}
+                value={novaSenha}
+                onChange={(e) => setNovaSenha(e.target.value)}
+                placeholder="Digite sua nova senha"
+                required
+              />
 
-        <button
-          type="submit"
-          className="botao-senha"
-          disabled={alterandoSenha}
-        >
-          {alterandoSenha ? 'Alterando...' : 'Alterar senha'}
-        </button>
+              <button
+                type="button"
+                className="botao-olho"
+                onClick={() => setMostrarSenha(!mostrarSenha)}
+              >
+                {mostrarSenha ? '🙈' : '👁️'}
+              </button>
+            </div>
+          </div>
 
-      </form>
+          <div className="campo-senha">
+            <label>Confirmar nova senha</label>
 
-    </div>
+            <div className="campo-senha-wrapper">
+              <input
+                type={mostrarSenha ? 'text' : 'password'}
+                value={confirmarSenha}
+                onChange={(e) => setConfirmarSenha(e.target.value)}
+                placeholder="Digite novamente sua nova senha"
+                required
+              />
+
+              <button
+                type="button"
+                className="botao-olho"
+                onClick={() => setMostrarSenha(!mostrarSenha)}
+              >
+                {mostrarSenha ? '🙈' : '👁️'}
+              </button>
+            </div>
+          </div>
+
+          {mensagemSenha && (
+            <p className="mensagem-sucesso">
+              {mensagemSenha}
+            </p>
+          )}
+
+          {erroSenha && (
+            <p className="mensagem-erro">
+              {erroSenha}
+            </p>
+          )}
+
+          <button
+            type="submit"
+            className="botao-senha"
+            disabled={alterandoSenha}
+          >
+            {alterandoSenha ? 'Alterando...' : 'Alterar senha'}
+          </button>
+
+        </form>
+
+      </div>
+
     </div>
   )
 }
 
 export default Perfil
+

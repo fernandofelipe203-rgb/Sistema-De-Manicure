@@ -3053,3 +3053,55 @@ width: 100%;
 .confirmacao-botoes button:hover {
   opacity: 0.9;
 }
+.link-publico {
+  margin-top: 25px;
+  padding: 20px;
+  background: #fff7fa;
+  border: 1px solid #f3dce5;
+  border-radius: 14px;
+}
+
+.link-publico label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #8a5a6b;
+}
+
+.link-publico-conteudo {
+  display: flex;
+  gap: 10px;
+}
+
+.link-publico-conteudo input {
+  flex: 1;
+  padding: 11px 13px;
+  border: 1px solid #ead2dc;
+  border-radius: 9px;
+  background: white;
+  color: #777;
+  font-size: 14px;
+  outline: none;
+}
+
+.link-publico-conteudo button {
+  padding: 11px 18px;
+  border: none;
+  border-radius: 9px;
+  background: #d96b91;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.link-publico-conteudo button:hover {
+  background: #c9577e;
+}
+.mensagem-link {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #c9577e;
+  font-weight: 600;
+}

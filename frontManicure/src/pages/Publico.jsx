@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from 'react'
-import { buscarDadosPublicos } from '../services/api'
+import { buscarDadosPublicosPorLink } from '../services/api'
 import './Publico.css'
 
 function Publico() {
@@ -11,9 +11,9 @@ function Publico() {
   useEffect(() => {
 
     const partes = window.location.pathname.split('/')
-    const profissionalId = partes[2]
+    const linkPublico = partes[2]
 
-    buscarDadosPublicos(profissionalId)
+    buscarDadosPublicosPorLink(linkPublico)
       .then((dadosRecebidos) => {
         setDados(dadosRecebidos)
       })
@@ -40,7 +40,7 @@ function Publico() {
   }
 function abrirWhatsApp(servico) {
 
-  const telefone = dados.telefone.replace(/\D/g, '')
+  const telefone = `55${dados.telefone.replace(/\D/g, '')}`
 
   const preco = servico.preco.toLocaleString('pt-BR', {
     style: 'currency',

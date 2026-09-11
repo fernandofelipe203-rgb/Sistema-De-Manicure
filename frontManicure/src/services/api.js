@@ -585,3 +585,15 @@ export async function buscarDadosPublicos(profissionalId) {
 
   return await resposta.json()
 }
+export async function buscarDadosPublicosPorLink(linkPublico) {
+
+  const resposta = await fetch(
+    `${API_URL}/publico/profissional/link/${linkPublico}`
+  )
+
+  if (!resposta.ok) {
+    throw new Error('Profissional não encontrada')
+  }
+
+  return await resposta.json()
+}

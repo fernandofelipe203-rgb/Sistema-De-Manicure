@@ -49,6 +49,15 @@ public class ProfissionalService {
                     "Já existe uma profissional cadastrada com este e-mail."
             );
         }
+        String linkPublico = gerarLinkPublico(profissional.getNome());
+
+        profissional.setLinkPublico(linkPublico);
+        if (profissionalRepository.findByLinkPublico(linkPublico).isPresent()) {
+
+            throw new ProfissionalDuplicadoException(
+                    "Já existe uma profissional usando este link público."
+            );
+        }
 
         profissional.setSenha(
                 passwordEncoder.encode(profissional.getSenha())
@@ -72,6 +81,18 @@ public class ProfissionalService {
                     "Já existe uma profissional cadastrada com este e-mail."
             );
         }
+
+        String novoLinkPublico = gerarLinkPublico(dados.getNome());
+
+        if (profissionalRepository.existsByLinkPublicoAndIdNot(
+                novoLinkPublico, id)) {
+
+            throw new ProfissionalDuplicadoException(
+                    "Já existe uma profissional usando este link público."
+            );
+        }
+
+        profissional.setLinkPublico(novoLinkPublico);
 
         profissional.setNome(dados.getNome());
         profissional.setEmail(dados.getEmail());
@@ -116,6 +137,17 @@ public class ProfissionalService {
                     "Já existe uma profissional cadastrada com este e-mail."
             );
         }
+        String novoLinkPublico = gerarLinkPublico(dados.getNome());
+
+        if (profissionalRepository.existsByLinkPublicoAndIdNot(
+                novoLinkPublico, id)) {
+
+            throw new ProfissionalDuplicadoException(
+                    "Já existe uma profissional usando este link público."
+            );
+        }
+
+        profissional.setLinkPublico(novoLinkPublico);
 
         profissional.setNome(dados.getNome());
         profissional.setEmail(dados.getEmail());
@@ -236,5 +268,43 @@ public class ProfissionalService {
                         ))
                         .toList()
         );
+    }
+    public ProfissionalPublicoDTO buscarDadosPublicosPorLink(String linkPublico) {
+
+        Profissional profissional =
+                profissionalRepository.findByLinkPublico(linkPublico)
+                        .orElse(null);
+
+        if (profissional == null) {
+            return null;
+        }
+
+        List<Servico> servicos =
+                servicoRepository.findByProfissionalId(
+                        profissional.getId()
+                );
+
+        return new ProfissionalPublicoDTO(
+                profissional.getNome(),
+                profissional.getTelefone(),
+                servicos.stream()
+                        .map(servico -> new ServicoPublicoDTO(
+                                servico.getId(),
+                                servico.getNome(),
+                                servico.getPreco(),
+                                servico.getDuracao()
+                        ))
+                        .toList()
+        );
+    }
+    private String gerarLinkPublico(String nome) {
+
+        return java.text.Normalizer
+                .normalize(nome, java.text.Normalizer.Form.NFD)
+                .replaceAll("\\p{M}", "")
+                .toLowerCase()
+                .trim()
+                .replaceAll("[^a-z0-9]+", "-")
+                .replaceAll("^-|-$", "");
     }
 }
