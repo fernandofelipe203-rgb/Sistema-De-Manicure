@@ -5,6 +5,7 @@ import com.ProjetoManicure.Manicure.exception.ClienteDuplicadoException;
 import com.ProjetoManicure.Manicure.exception.ClienteNaoEncontradoException;
 import com.ProjetoManicure.Manicure.model.Cliente;
 import com.ProjetoManicure.Manicure.model.Profissional;
+import com.ProjetoManicure.Manicure.repository.AgendamentoRepository;
 import com.ProjetoManicure.Manicure.repository.ClienteRepository;
 import com.ProjetoManicure.Manicure.repository.ProfissionalRepository;
 import io.jsonwebtoken.Claims;
@@ -17,7 +18,8 @@ import java.util.List;
 
 @Service
 public class ClienteService {
-
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
     @Autowired
     private ClienteRepository clienteRepository;
 
@@ -196,7 +198,11 @@ public class ClienteService {
         if (cliente == null) {
             return false;
         }
-
+        if (agendamentoRepository.existsByClienteId(id)) {
+            throw new IllegalArgumentException(
+                    "Não é possível excluir esta cliente porque ela possui agendamentos cadastrados. Exclua ou altere os agendamentos antes de remover a cliente."
+            );
+        }
         cliente.getProfissionais().removeIf(
                 profissional -> profissional.getId() == profissionalId
         );

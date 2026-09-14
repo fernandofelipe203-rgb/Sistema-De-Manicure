@@ -22,6 +22,7 @@ public interface AgendamentoRepository
             int profissionalId,
             LocalDateTime dataHora
     );
+    boolean existsByClienteId(int clienteId);
     List<Agendamento> findByProfissional_IdAndDataHoraBetween(
             int profissionalId,
             LocalDateTime dataInicio,

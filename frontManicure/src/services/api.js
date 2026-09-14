@@ -1,4 +1,4 @@
-const API_URL = 'http://192.168.1.5:8080'
+const API_URL = 'http://192.168.1.4:8080'
 
 
 // =========================
@@ -77,9 +77,12 @@ export async function excluirCliente(id) {
     }
   })
 
-  if (!resposta.ok) {
-    throw new Error('Erro ao excluir cliente')
-  }
+ if (!resposta.ok) {
+   const mensagem = await resposta.text()
+   throw new Error(
+     mensagem || 'Erro ao excluir cliente'
+   )
+ }
 }
 
 

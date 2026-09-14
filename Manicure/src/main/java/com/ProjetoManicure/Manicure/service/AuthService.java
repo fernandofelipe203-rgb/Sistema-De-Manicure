@@ -37,10 +37,12 @@ public class AuthService {
         if (!senhaCorreta) {
             return null;
         }
-
+        System.out.println("DEBUG JWT - ID: " + profissional.getId());
+        System.out.println("DEBUG JWT - EMAIL: " + profissional.getEmail());
         return jwtService.gerarToken(
                 profissional.getId(),
                 profissional.getEmail()
+
         );
     }
 }

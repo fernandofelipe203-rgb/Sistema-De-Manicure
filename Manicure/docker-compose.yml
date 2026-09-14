@@ -1,0 +1,39 @@
+  services:
+
+    mysql:
+      image: mysql:8
+      container_name: manicure-mysql
+      environment:
+        MYSQL_ROOT_PASSWORD: 123456
+        MYSQL_DATABASE: projeto_manicure
+
+      healthcheck:
+        test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p123456" ]
+        interval: 5s
+        timeout: 5s
+        retries: 10
+      volumes:
+        - ./database/sqlManicure.sql:/docker-entrypoint-initdb.d/sqlManicure.sql
+        - mysql_data:/var/lib/mysql
+
+    backend:
+      image: manicure-backend:latest
+      container_name: manicure-backend
+      ports:
+        - "8080:8080"
+      volumes:
+            - ./uploads:/app/uploads
+      environment:
+        SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/projeto_manicure
+        SPRING_DATASOURCE_USERNAME: root
+        SPRING_DATASOURCE_PASSWORD: 123456
+      depends_on:
+        mysql:
+          condition: service_healthy
+    frontend:
+      image: manicure-frontend:latest
+      container_name: manicure-frontend
+      ports:
+        - "5173:5173"
+  volumes:
+    mysql_data:

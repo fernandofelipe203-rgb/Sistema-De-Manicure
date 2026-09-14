@@ -13,10 +13,18 @@ function Clientes() {
   const [busca, setBusca] = useState('')
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState('')
-  const [mostrarModal, setMostrarModal] = useState(false)
-  const [nome, setNome] = useState('')
-  const [telefone, setTelefone] = useState('')
-  const [email, setEmail] = useState('')
+ const [mostrarModal, setMostrarModal] = useState(() => {
+   return localStorage.getItem('clientes_modal') === 'aberto'
+ })
+  const [nome, setNome] = useState(() => {
+    return localStorage.getItem('cliente_nome') || ''
+  })
+ const [telefone, setTelefone] = useState(() => {
+   return localStorage.getItem('cliente_telefone') || ''
+ })
+ const [email, setEmail] = useState(() => {
+   return localStorage.getItem('cliente_email') || ''
+ })
   const [salvando, setSalvando] = useState(false)
   const [clienteEditando, setClienteEditando] = useState(null)
   const [sucesso, setSucesso] = useState('')
@@ -38,6 +46,24 @@ function Clientes() {
 
     carregarClientes()
   }, [])
+useEffect(() => {
+  if (mostrarModal) {
+    localStorage.setItem('clientes_modal', 'aberto')
+  } else {
+    localStorage.removeItem('clientes_modal')
+  }
+}, [mostrarModal])
+useEffect(() => {
+  localStorage.setItem('cliente_nome', nome)
+}, [nome])
+
+useEffect(() => {
+  localStorage.setItem('cliente_telefone', telefone)
+}, [telefone])
+
+useEffect(() => {
+  localStorage.setItem('cliente_email', email)
+}, [email])
 
   async function salvarCliente(event) {
     event.preventDefault()
@@ -61,6 +87,9 @@ function Clientes() {
       setNome('')
       setTelefone('')
       setEmail('')
+      localStorage.removeItem('cliente_nome')
+      localStorage.removeItem('cliente_telefone')
+      localStorage.removeItem('cliente_email')
 
       setMostrarModal(false)
       setSucesso('Cliente cadastrada com sucesso!')
@@ -156,7 +185,7 @@ function Clientes() {
 
     } catch (erro) {
       console.error(erro)
-      setErro('Não foi possível excluir a cliente.')
+      setErro(erro.message)
     } finally {
       setSalvando(false)
     }
@@ -323,6 +352,12 @@ function Clientes() {
                   Tem certeza que deseja excluir a cliente
                   <strong> {clienteExcluindo.nome}</strong>?
                 </p>
+
+                {erro && (
+                  <div className="alerta-erro">
+                    ⚠️ {erro}
+                  </div>
+                )}
 
               </div>
 
@@ -584,7 +619,17 @@ function Clientes() {
                   <button
                     type="button"
                     className="botao-cancelar"
-                    onClick={() => setMostrarModal(false)}
+                    onClick={() => {
+                      setNome('')
+                      setTelefone('')
+                      setEmail('')
+
+                      localStorage.removeItem('cliente_nome')
+                      localStorage.removeItem('cliente_telefone')
+                      localStorage.removeItem('cliente_email')
+
+                      setMostrarModal(false)
+                    }}
                   >
                     Cancelar
                   </button>

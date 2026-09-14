@@ -106,11 +106,7 @@ public class AgendamentoService {
             int profissionalId,
             Agendamento dados) {
 
-        if (dados.getDataHora().isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException(
-                    "Não é permitido alterar o agendamento para uma data ou horário passado."
-            );
-        }
+
 
         Agendamento agendamento =
                 agendamentoRepository
@@ -179,7 +175,9 @@ public class AgendamentoService {
 
         agendamento.setStatus(novoStatus);
 
-        if (!"CONCLUIDO".equals(statusAtual)
+        if (dados.getValor() != null) {
+            agendamento.setValor(dados.getValor());
+        } else if (!"CONCLUIDO".equals(statusAtual)
                 && "CONCLUIDO".equals(novoStatus)) {
 
             agendamento.setValor(servico.getPreco());

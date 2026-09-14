@@ -689,147 +689,6 @@ button {
  }
 
 
- /* =========================
-    MODAL NO CELULAR
-    ========================= */
-
- @media (max-width: 600px) {
-.cliente {
-  align-items: flex-start;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.cliente-identificacao {
-  width: 100%;
-}
-
-.cliente-acoes {
-  width: 100%;
-}
-   .modal-overlay {
-     padding: 14px;
-   }
-
-   .modal {
-     max-width: 100%;
-     border-radius: 16px;
-   }
-
-   .modal-cabecalho {
-     padding: 20px 20px 16px;
-   }
-
-   .modal form {
-     padding: 20px;
-   }
-
-   .modal-acoes {
-     flex-direction: column-reverse;
-   }
-
-   .modal-acoes button {
-     width: 100%;
-   }
-
- }
-
-  /* Animação */
-
-  @keyframes abrirModal {
-    from {
-      opacity: 0;
-      transform: scale(0.95) translateY(10px);
-    }
-
-    to {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-  }
-
-  /* =========================
-     CABEÇALHO
-     ========================= */
-
-  .modal-cabecalho {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-
-    padding: 24px 26px 18px;
-
-    border-bottom: 1px solid #f0e5e7;
-  }
-
-  .modal-cabecalho h2 {
-    margin: 0;
-
-    font-size: 22px;
-
-    color: #514648;
-  }
-
-  .modal-cabecalho p {
-    margin: 5px 0 0;
-
-    font-size: 14px;
-
-    color: #8d7d80;
-  }
-
-  /* Botão fechar */
-
-  .modal-fechar {
-    width: 34px;
-    height: 34px;
-
-    border: none;
-    border-radius: 50%;
-
-    background: #fdf1f3;
-
-    color: #b94f6b;
-
-    font-size: 24px;
-    line-height: 1;
-
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    transition: 0.2s;
-  }
-
-  .modal-fechar:hover {
-    background: #f8dce3;
-  }
-
-  /* =========================
-     FORMULÁRIO
-     ========================= */
-
-  .modal form {
-    padding: 24px 26px 26px;
-  }
-
-  .campo {
-    display: flex;
-    flex-direction: column;
-
-    margin-bottom: 18px;
-  }
-
-  .campo label {
-    margin-bottom: 7px;
-
-    font-size: 14px;
-    font-weight: 600;
-
-    color: #514648;
-  }
 
   .campo input {
     width: 100%;
@@ -3104,4 +2963,228 @@ width: 100%;
   font-size: 13px;
   color: #c9577e;
   font-weight: 600;
+}
+/* =========================
+   CONFIRMAÇÃO DE EXCLUSÃO
+   ========================= */
+
+.confirmacao-exclusao {
+  width: 100%;
+  max-width: 420px;
+  margin: 20px auto;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #f1dfe6;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(180, 80, 120, 0.12);
+  text-align: center;
+}
+
+.confirmacao-exclusao {
+  width: calc(100% - 40px);
+  max-width: 340px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #f1dfe6;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(180, 80, 120, 0.12);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.confirmacao-exclusao {
+  width: 280px;
+  margin: 20px auto;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #f1dfe6;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(180, 80, 120, 0.12);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.confirmacao-exclusao {
+  width: 240px;
+  margin: 15px auto;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #f1dfe6;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(180, 80, 120, 0.10);
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.confirmacao-exclusao {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 240px;
+  padding: 14px;
+
+  background: #fff;
+  border: 1px solid #f1dfe6;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(180, 80, 120, 0.15);
+
+  text-align: center;
+  box-sizing: border-box;
+  z-index: 9999;
+}
+.confirmacao-exclusao {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 260px;
+  padding: 18px 16px;
+
+  background: #fff;
+  border: 1px solid #f3dce5;
+  border-radius: 18px;
+
+  box-shadow: 0 12px 35px rgba(120, 60, 85, 0.16);
+
+  text-align: center;
+  box-sizing: border-box;
+  z-index: 9999;
+}
+
+.confirmacao-exclusao p {
+  margin: 0 0 16px;
+
+  color: #6b555d;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.acoes-confirmacao {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.acoes-confirmacao button {
+  min-width: 82px;
+  padding: 8px 12px;
+
+  border-radius: 9px;
+  border: none;
+
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirmacao-exclusao {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 270px;
+  padding: 22px 18px;
+
+  background: linear-gradient(145deg, #ffffff, #fff7fa);
+  border: 1px solid #f1d5df;
+  border-radius: 22px;
+
+  box-shadow:
+    0 15px 35px rgba(130, 70, 95, 0.15),
+    0 3px 8px rgba(130, 70, 95, 0.08);
+
+  text-align: center;
+  box-sizing: border-box;
+  z-index: 9999;
+}
+
+.confirmacao-exclusao {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 290px;
+  padding: 24px 20px;
+
+  background: #ffffff;
+  border-radius: 20px;
+
+  border: 1px solid #f3d9e3;
+
+  box-shadow:
+    0 20px 50px rgba(90, 45, 65, 0.18),
+    0 5px 15px rgba(90, 45, 65, 0.08);
+
+  text-align: center;
+  box-sizing: border-box;
+
+  z-index: 9999;
+
+  animation: abrirConfirmacao 0.2s ease-out;
+}
+
+.confirmacao-exclusao p {
+  margin: 0 0 20px;
+
+  color: #5f4b54;
+
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.acoes-confirmacao {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.acoes-confirmacao button {
+  flex: 1;
+
+  height: 38px;
+
+  border: none;
+  border-radius: 10px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.confirmacao-exclusao .botao-cancelar {
+  background: #f7edf1;
+  color: #725b64;
+}
+
+.confirmacao-exclusao .botao-excluir {
+  background: #d85f87;
+  color: #ffffff;
+}
+
+.confirmacao-exclusao .botao-cancelar:hover {
+  background: #eee0e6;
+}
+
+.confirmacao-exclusao .botao-excluir:hover {
+  background: #c95078;
+}
+
+@keyframes abrirConfirmacao {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.94);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }

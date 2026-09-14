@@ -25,7 +25,37 @@ function Financeiro() {
   const [dataFim, setDataFim] = useState('')
   const [despesas, setDespesas] = useState([])
   const [despesaEditando, setDespesaEditando] = useState(null)
+  useEffect(() => {
+    const dadosSalvos = localStorage.getItem('financeiroDespesaEditando')
+
+    if (dadosSalvos) {
+      setDespesaEditando(JSON.parse(dadosSalvos))
+    }
+  }, [])
+useEffect(() => {
+  if (despesaEditando) {
+    localStorage.setItem(
+      'financeiroDespesaEditando',
+      JSON.stringify(despesaEditando)
+    )
+  }
+}, [despesaEditando])
   const [novaDespesa, setNovaDespesa] = useState(null)
+  useEffect(() => {
+    const dadosSalvos = localStorage.getItem('financeiroNovaDespesa')
+
+    if (dadosSalvos) {
+      setNovaDespesa(JSON.parse(dadosSalvos))
+    }
+  }, [])
+useEffect(() => {
+          if (novaDespesa) {
+            localStorage.setItem(
+              'financeiroNovaDespesa',
+              JSON.stringify(novaDespesa)
+            )
+          }
+        }, [novaDespesa])
   const [despesaParaExcluir, setDespesaParaExcluir] = useState(null)
 
   const [resumoFinanceiro, setResumoFinanceiro] = useState({
@@ -435,6 +465,7 @@ function cancelarExclusao() {
       }))
 
       setDespesaEditando(null)
+      localStorage.removeItem('financeiroDespesaEditando')
 
     } catch (erro) {
 
@@ -575,6 +606,7 @@ function cancelarExclusao() {
       }
 
       setNovaDespesa(null)
+      localStorage.removeItem('financeiroNovaDespesa')
 
     } catch (erro) {
 
@@ -975,13 +1007,14 @@ function cancelarExclusao() {
 
                 <div className="acoes-edicao-despesa">
 
-                  <button
-                    onClick={() =>
-                      setNovaDespesa(null)
-                    }
-                  >
-                    Cancelar
-                  </button>
+                 <button
+                   onClick={() => {
+                     setNovaDespesa(null)
+                     localStorage.removeItem('financeiroNovaDespesa')
+                   }}
+                 >
+                   Cancelar
+                 </button>
 
                   <button
                     onClick={salvarNovaDespesa}
@@ -1055,13 +1088,14 @@ function cancelarExclusao() {
 
                 <div className="acoes-edicao-despesa">
 
-                  <button
-                    onClick={() =>
-                      setDespesaEditando(null)
-                    }
-                  >
-                    Cancelar
-                  </button>
+                 <button
+                   onClick={() => {
+                     setDespesaEditando(null)
+                     localStorage.removeItem('financeiroDespesaEditando')
+                   }}
+                 >
+                   Cancelar
+                 </button>
 
                   <button
                     onClick={salvarEdicaoDespesa}

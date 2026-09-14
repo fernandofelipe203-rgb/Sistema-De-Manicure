@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+
 import './App.css'
 
 import Layout from './components/Layout'
@@ -15,9 +16,16 @@ import Publico from './pages/Publico'
 function App() {
   const [email, setEmail] = useState('')
   const [senha, setSenha] = useState('')
-  const [logado, setLogado] = useState(false)
-  const [pagina, setPagina] = useState('dashboard')
+ const [logado, setLogado] = useState(() => {
+     return localStorage.getItem('token') !== null
+   })
+  const [pagina, setPagina] = useState(() => {
+    return localStorage.getItem('pagina') || 'dashboard'
+  })
   const [erroLogin, setErroLogin] = useState('')
+  useEffect(() => {
+    localStorage.setItem('pagina', pagina)
+  }, [pagina])
 
   const caminho = window.location.pathname
 
@@ -27,23 +35,26 @@ function App() {
  ) {
    return <Publico />
  }
+const API_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:8080'
+  : 'http://192.168.1.4:8080'
 
   async function handleLogin(event) {
     event.preventDefault()
     setErroLogin('')
 
 
-    try {
-      const resposta = await fetch('http://192.168.1.5:8080/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: email,
-          senha: senha
+     try {
+        const resposta = await fetch(`${API_URL}/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: email,
+            senha: senha
+          })
         })
-      })
 
       if (!resposta.ok) {
         setErroLogin('E-mail ou senha inválidos.')

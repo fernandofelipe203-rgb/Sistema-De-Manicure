@@ -11,13 +11,23 @@ function Servicos() {
   const [servicos, setServicos] = useState([])
   const [carregando, setCarregando] = useState(true)
 
-  const [modalAberto, setModalAberto] = useState(false)
+  const [modalAberto, setModalAberto] = useState(() => {
+    return localStorage.getItem('servicos_modal') === 'aberto'
+  })
   const [editando, setEditando] = useState(false)
 
   const [id, setId] = useState(null)
-  const [nome, setNome] = useState('')
-  const [preco, setPreco] = useState('')
-  const [duracao, setDuracao] = useState('')
+ const [nome, setNome] = useState(() => {
+   return localStorage.getItem('servico_nome') || ''
+ })
+
+ const [preco, setPreco] = useState(() => {
+   return localStorage.getItem('servico_preco') || ''
+ })
+
+ const [duracao, setDuracao] = useState(() => {
+   return localStorage.getItem('servico_duracao') || ''
+ })
 
   const [mensagem, setMensagem] = useState('')
   const [tipoMensagem, setTipoMensagem] = useState('')
@@ -25,6 +35,25 @@ function Servicos() {
   useEffect(() => {
     carregarServicos()
   }, [])
+useEffect(() => {
+  if (modalAberto) {
+    localStorage.setItem('servicos_modal', 'aberto')
+  } else {
+    localStorage.removeItem('servicos_modal')
+  }
+}, [modalAberto])
+
+useEffect(() => {
+  localStorage.setItem('servico_nome', nome)
+}, [nome])
+
+useEffect(() => {
+  localStorage.setItem('servico_preco', preco)
+}, [preco])
+
+useEffect(() => {
+  localStorage.setItem('servico_duracao', duracao)
+}, [duracao])
 
   async function carregarServicos() {
     try {
@@ -63,7 +92,16 @@ function Servicos() {
     setModalAberto(true)
   }
 
+
   function fecharModal() {
+    setNome('')
+    setPreco('')
+    setDuracao('')
+
+    localStorage.removeItem('servico_nome')
+    localStorage.removeItem('servico_preco')
+    localStorage.removeItem('servico_duracao')
+
     setModalAberto(false)
   }
 

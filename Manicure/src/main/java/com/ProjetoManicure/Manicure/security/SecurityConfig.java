@@ -28,7 +28,7 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(
                 List.of("http://localhost:5173",
-                "http://192.168.1.5:5173")
+                "http://192.168.1.4:5173")
         );
 
         configuration.setAllowedMethods(
