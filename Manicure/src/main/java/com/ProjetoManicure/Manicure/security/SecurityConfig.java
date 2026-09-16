@@ -30,7 +30,8 @@ public class SecurityConfig {
                 List.of(
                         "http://localhost:5173",
                         "http://192.168.1.4:5173",
-                        "http://168.138.138.40:5173"
+                        "http://168.138.138.40:5173",
+                        "http://168.138.138.40"
                 )
 
         );
