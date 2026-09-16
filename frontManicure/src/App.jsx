@@ -37,7 +37,7 @@ function App() {
  }
 const API_URL = window.location.hostname === 'localhost'
   ? 'http://localhost:8080'
-  : 'http://192.168.1.4:8080'
+  : 'http://168.138.138.40:8080'
 
   async function handleLogin(event) {
     event.preventDefault()

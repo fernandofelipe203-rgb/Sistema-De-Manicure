@@ -34,7 +34,7 @@ function Header() {
       <div className="perfil">
         {perfil?.foto ? (
           <img
-            src={`http://192.168.1.4:8080${perfil.foto}`}
+            src={`http://168.138.138.40:8080${perfil.foto}`}
             alt={`Foto de ${perfil.nome}`}
           />
         ) : (
