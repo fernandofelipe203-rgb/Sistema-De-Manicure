@@ -68,7 +68,7 @@
           const token = localStorage.getItem('token')
 
           const resposta = await fetch(
-            'http://168.138.138.40:8080/profissionais/me/senha',
+            '/api/profissionais/me/senha',
             {
               method: 'PUT',
               headers: {
@@ -208,7 +208,7 @@
               <div className="perfil-avatar">
                 {perfil.foto ? (
                   <img
-                   src={`http://168.138.138.40:8080${perfil.foto}`}
+                   src={perfil.foto}
                     alt={`Foto de ${perfil.nome}`}
                   />
                 ) : (
