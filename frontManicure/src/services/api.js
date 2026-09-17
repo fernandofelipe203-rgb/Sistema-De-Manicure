@@ -1,4 +1,6 @@
-const API_URL = 'http://168.138.138.40:8080'
+const API_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:8080'
+  : '/api'
 
 
 // =========================
